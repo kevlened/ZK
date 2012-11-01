@@ -10,7 +10,15 @@ This all rolls into one lovely bundle of joy.
 
 What do I need to run it?
 --
-+ Python 2.7 (This is what I test with, it may work with higher or lower versions)
++ Python 2.6.6 (This is what I test with, 2.7.x should work, 3.x might)
 + [Twisted Python](http://twistedmatrix.com)
 + [Flask](http://flask.pocoo.org)
-+ SQLite (comes default in Python)
++ sqlite3 (comes default in Python)
+
+Todo
+--
++ Basically everything.
+
+Status
+--
++ (v0.0.1) Nonexistent
