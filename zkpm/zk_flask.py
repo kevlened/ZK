@@ -103,8 +103,7 @@ def requires_login(return_page=None):
 	# Everything is prefixed with 'le' to make people cringe.
 	if request.method == "POST":
 		if 'le-username' not in request.form or 'le-password' not in request.form:
-			flash('Something went wrong.')
-			print 'no le-username or le-password'
+			flash('Something went wrong.', 'error')
 			return redirect(url_for('login'))
 		username = request.form['le-username']
 		password = request.form['le-password']
@@ -119,5 +118,4 @@ def requires_login(return_page=None):
 			session.regenerate()
 			return redirect(url_for('index'))
 	else:
-		flash("Redirecting?!")
 		return redirect(url_for('login'))
