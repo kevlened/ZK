@@ -13,7 +13,18 @@ What do I need to run it?
 + Python 2.6.6 (This is what I test with, 2.7.x should work, 3.x might)
 + [Twisted Python](http://twistedmatrix.com)
 + [Flask](http://flask.pocoo.org)
++ [Flask-KVSession](https://github.com/mbr/flask-kvsession)
 + sqlite3 (comes default in Python)
+
+Installation
+--
++ Download the latest version of ZK.
++ Install the dependencies
++ Open `default_settings.py` and, if required, change anything you feel.
++ Open a terminal where your `zkp.py` is.
++ Run the first time installer: `python zkp.py --install`
++ Follow the prompts and allow the database to be initialised and populated.
++ Run ZK: `python zkp.py`
 
 Todo
 --

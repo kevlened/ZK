@@ -1,0 +1,19 @@
+{% extends "layout.html" %}
+{% block title %}Login{% endblock %}
+{% block header %}Login{% endblock %}
+{% block content %}
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+	{% for category, message in messages %}
+	<p type="flash-{{ category }}">{{ message }}</p>
+	{% endfor %}
+{% endif %}
+{% endwith %}
+	<p>
+		<form method="POST" action="/do-login">
+			<input type="text" id="le-username" name="le-username" /><br />
+			<input type="password" id="le-password" name="le-password" />
+			<input type="submit" id="le-submit" name="le-submit" value="Login" />
+		</form>
+	</p>
+{% endblock %}

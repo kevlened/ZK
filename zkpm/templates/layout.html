@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	{% block head %}
+	<meta charset="utf-8" />
+	<title>{% block title %}{% endblock %} - ZK</title>
+	<link rel="stylesheet" href="/static/960.css"/>
+	<link rel="stylesheet" href="/static/main.css"/>
+	{% endblock %}
+</head>
+<body>
+	<div class="container_12">
+		<div class="grid_7 suffix_5">
+			<span class="logo_text">{% block header %}{% endblock %}</span>
+		</div>
+	</div>
+	<div class="container_12 transition_div">
+		<div class="grid_12">
+			{% if login %}
+			<a href="/">Home</a> &mdash;
+			<a href="/logout">Logout ({{ login }})</a>
+			{% else %}
+			<a href="/login">Login</a>
+			{% endif %}
+		</div>
+	</div>
+	<div class="container_12 content">
+		<div class="grid_12" id="stats">
+			{% block content %}{% endblock %}
+		</div>
+	</div>
+</body>
+</html>
