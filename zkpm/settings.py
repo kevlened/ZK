@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Disable this in a production environment.
 # This enables Flask's debugger.
-DEBUG = True
+DEBUG = False
 
 # --- Webserver Settings ---
 # The port and host which the web front will bind to.
@@ -17,7 +17,7 @@ ZK_PORT = "1111"
 
 # --- Database Settings ---
 # Can be sqlite3 or MySQL
-DATABASE_TYPE = 'mysql' #"sqlite3"
+DATABASE_TYPE = "sqlite3"
 # These are only needed if you picked MySQL above.
 DATABASE_HOST = "localhost"
 DATABASE_USER = "foo"
