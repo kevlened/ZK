@@ -1,24 +1,35 @@
 # -*- coding: utf-8 -*-
 from contextlib import closing
-from zk_flask import connect_db, hash_pass
-import default_settings as settings
+from zk_flask import pysql as pysql_
+from zk_flask import hash_pass
+import settings
 import re, getpass, os, sys
-
-def query_db(query, args=(), one=False, commit=False):
-	db = connect_db()
-	cur = db.execute(query, args)
-	if commit:
-		db.commit()
-	rv = [dict((cur.description[idx][0], value) 
-			for idx, value in enumerate(row)) for row in cur.fetchall()]
-	return (rv[0] if rv else None) if one else rv
 
 def init_db():
 	print 'Initialising database, and inserting schema.'
-	with closing(connect_db()) as db:
-		with open('zkpm{0}schema.sql'.format(os.sep), 'rb') as f:
-			db.cursor().executescript(f.read())
-		db.commit()
+	schema = False
+	if settings.DATABASE_TYPE.lower() in ('sqlite', 'sqlite3'):
+		schema = 'schema_sqlite3.sql'
+		db_t = 'sqlite'
+	elif settings.DATABASE_TYPE.lower() in ('mysql'):
+		schema = 'schema_mysql.sql'
+		db_t = 'mysql'
+	if not schema:
+		print 'Given database type was not valid, bailing.'
+		sys.exit(1)
+	pysql = pysql_()
+
+	# Stupid workarounds because MySQL doesn't support .executescript()
+	if db_t == 'sqlite':
+		with open('zkpm{0}{1}'.format(os.sep, schema), 'rb') as f:
+			pysql._cursor.executescript(f.read())
+			pysql._cursor.commit()
+	elif db_t == 'mysql':
+		with open('zkpm{0}{1}'.format(os.sep, schema), 'rb') as f:
+			for line in f.readlines():
+				print line
+				pysql = pysql_()
+				pysql.query(line)
 	print 'Database initialised.'
 
 def gather_details():
@@ -36,16 +47,21 @@ def gather_details():
 				break
 		email = raw_input('Your email (optional): ')
 		print 'User: ',username
-		print 'email: ',email
+		print 'email:',email
 		correct = raw_input('Is this correct? [Y/n] ').lower() in ('y', 'yes')
 	submit_details (username, password, email)
 
 def submit_details(username, password, email):
-	query = "INSERT INTO `users` (`username`, `password`, `email`) VALUES (?,?,?);"
-	query_db(query, args=[u'{0}'.format(username), u'{0}'.format(hash_pass(username, password)), u'{0}'.format(email)], commit=True)
+	pysql = pysql_()
+	data = {
+		"username": username,
+		"password": hash_pass(username, password),
+		"email": email
+	}
+	pysql.insert('users', data)
 
 def main():
-	if os.path.isfile(settings.DATABASE):
+	if settings.DATABASE_TYPE.lower() in ('sqlite', 'sqlite3') and os.path.isfile(settings.DATABASE):
 		print 'Sorry, it appears the ZK database you\'ve selected already exists.'
 		print 'Either delete your database file, or change it to a different file in the settings file.'
 		sys.exit(1)

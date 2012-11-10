@@ -3,7 +3,7 @@ from twisted.internet.protocol import Protocol, Factory
 from twisted.internet import reactor
 from twisted.web.wsgi import WSGIResource
 from twisted.web.server import Site
-import default_settings as settings
+import settings
 import zk_flask # Setup the Flask app + frontend handle.
 
 class Logger():
@@ -52,3 +52,6 @@ reactor.listenTCP(int(settings.WEB_PORT), site)
 def main():
 	Logger.info('Running reactor.')
 	reactor.run()
+
+def revision():
+	return 'r2'

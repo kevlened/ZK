@@ -8,14 +8,23 @@ body {
 
 .container_12 {
   color: #000000;
-  background-color: #DCDCCC;
+  background-color: #EBF2F5;/*#DCDCCC;*/
   border: solid #3F3F3F 2px;
 }
 
+.forkme {
+	position: relative;
+	display: block;
+	top: 0;
+	right: -1px;
+	border: 0;
+	margin-bottom: -149px;
+}
+
 .transition_div {
-  background-color: #70DBDB;
+  background-color: #FFFAF0;/*#70DBDB;*
   /*background-image: url('/static/stripes.png');*/
-  opacity: 0.8;
+  /*opacity: 0.8;*/
   border: none;
 }
 .logo_text {

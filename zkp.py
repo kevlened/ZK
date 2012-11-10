@@ -30,7 +30,8 @@ if __name__ == '__main__':
 			main()
 			sys.exit(0)
 		elif sys.argv[1] in ('-v', '--version'):
-			print 'No.'
+			from zkpm.master import version
+			print 'ZK ',version()
 			sys.exit(0)
 	
 	try:
@@ -38,5 +39,6 @@ if __name__ == '__main__':
 	except ImportError as e:
 		print 'An error occured importing ZK\'s master class.'
 		print 'Try fixing your installation and try again.'
+		raise
 		sys.exit(1)
 	main()

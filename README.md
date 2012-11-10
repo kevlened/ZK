@@ -3,33 +3,63 @@ ZK (Protection)
 
 What is it?
 --
-ZKP started off as a simple idea by PigBacon, which was mostly based around the management of Minecraft clients. This was private and - since it was written in PHP - came with high overhead, wasn't extremely well implemented, and was just a general unpleasant beast to work with.
+ZK(P) started off as a simple idea by PigBacon, which was mostly based around the management of Minecraft clients. This was private and - since it was written in PHP - came with high overhead, wasn't extremely well implemented, and was just a general unpleasant beast to work with.
 
-Now it's a Python based management system which uses Flask as the front end for management, Twisted as the back end for communication, and SQLite for data storage.
+Now it's a Python based management system which uses Flask as the front end for management, Twisted as the back end for communication, and sqlite for data storage.
 This all rolls into one lovely bundle of joy.
+
+It is developed by _Chris_ and _Huey_.
 
 What do I need to run it?
 --
-+ Python 2.6.6 (This is what I test with, 2.7.x should work, 3.x might)
++ Python 2.7.3 (This is what I test with, 2.6.x should work, 3.x probably won't)
 + [Twisted Python](http://twistedmatrix.com)
 + [Flask](http://flask.pocoo.org)
 + [Flask-KVSession](https://github.com/mbr/flask-kvsession)
-+ sqlite3 (comes default in Python)
++ sqlite3 (comes default in Python) or MySQL (requires MySQLdb Python module)
+	+ You can choose either in the settings, so don't fret.
+	+ sqlite3 is the default, so that should be fine.
+
+Notes
+--
++ This uses a modified version of my [pysql-wrapper](https://github.com/PigBacon/pysql-wrapper).
+	+ The usage is the same, but it is modified to work with the multiple threading ideas of Flask.
+	+ A pysql_wrapper object is closed every time a query is executed, so you should make a new one before querying stuff.
++ ZK __is not__ meant to prevent cracking.
+	+ The weakest link in your app may well be the server, and whilst we'll try to prevent it being easy, this might well be a poor security system.
+	+ This is aimed to make your life as a programmer/application manager easier, not be a foolproof anti-cracking protection system.
++ If you're interested in the database schema, look at the `schema_sqlite3.sql` file.
+	+ `schema_mysql.sql` is three single line commands, because MySQL doesn't support `.executescript()` like sqlite. (Pah!)
 
 Installation
 --
 + Download the latest version of ZK.
 + Install the dependencies
-+ Open `default_settings.py` and, if required, change anything you feel.
++ Open `settings.py` and, if required, change anything you feel.
 + Open a terminal where your `zkp.py` is.
 + Run the first time installer: `python zkp.py --install`
 + Follow the prompts and allow the database to be initialised and populated.
 + Run ZK: `python zkp.py`
+	+ You should probably generate a secret key here.
+	+ Visit http://yourhost:port/secret and put those in your settings file.
 
 Todo
 --
-+ Basically everything.
++ Complete front end management.
++ Backend + backend protocol.
++ Example clients in various languages to show implementation.
++ More robust logging.
 
 Status
 --
-+ (v0.0.1) Nonexistent
++ __r2__
+	+ Changed to pysql-wrapper.
+	+ _Cleaned_ up the install function. (Required workarounds for MySQL, so it's not perfect.)
+	+ Support for MySQL aswell as default sqlite3.
+	+ Misc bits of code cleanup.
+	+ Start of `/manage/app` and `/manage/key` web pages. (Currently execute `abort(418)`.)
++ __r1__
+	+ Front end mostly functional
+	+ Template works
+	+ Twisted backend is useless but functioning
+	+ KVSession is handling everything correctly and securely

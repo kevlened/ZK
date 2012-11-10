@@ -1,3 +1,7 @@
+DROP TABLE IF EXISTS `users`; -- Dropping the tables to create them again, with IF NOT EXISTS?
+DROP TABLE IF EXISTS `apps`;  -- I know, I'm totally crazy!
+DROP TABLE IF EXISTS `licenses`;
+
 CREATE TABLE IF NOT EXISTS `users` ( -- People who can login.
 `id` INTEGER PRIMARY KEY,
 `username` varchar(32) NOT NULL,

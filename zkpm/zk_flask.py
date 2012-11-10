@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from flask import Flask, render_template, session, abort, request, g, redirect, url_for, flash
-import default_settings as settings
+import settings
+from pysql_wrapper import pysql_wrapper
 
 app = Flask(__name__)
 app.debug = settings.DEBUG
@@ -45,7 +46,16 @@ def secret(length=20):
 	resp.mimetype = 'text/plain'
 	return resp
 
-# Security related. Logging in, account management, database connections, etc.
+@app.route("/manage/app")
+def app_manage():
+	abort(418)
+
+@app.route("/manage/key")
+def key_manage():
+	abort(418)
+
+# --------------------------------------------------
+# Past here: logging in, account management, database connections, etc.
 from simplekv.memory import DictStore
 from flaskext.kvsession import KVSessionExtension
 from contextlib import closing
@@ -55,37 +65,31 @@ store = DictStore()
 kvsess = KVSessionExtension(store, app) # http://flask-kvsession.readthedocs.org/en/0.3.1/
 #kvsess.cleanup_sessions() # Cleanup the old sessions periodically.
 
-def connect_db():
-	return sqlite3.connect(settings.DATABASE)
-
-def get_connection():
-	db = getattr(g, '_db', None)
-	if db is None:
-		db = g._db = connect_db()
-	return db
-
-def query_db(query, args=(), one=False, commit=False):
-	db = get_connection()
-	cur = db.execute(query, args)
-	if commit:
-		db.commit()
-	rv = [dict((cur.description[idx][0], value) 
-			for idx, value in enumerate(row)) for row in cur.fetchall()]
-	return (rv[0] if rv else None) if one else rv
+def pysql():
+	# We'll populate this with the info for both sqlite3 and MySQL.
+	# This way, whatever they choose, it'll Just Work (TM).
+	pysql_conf = {
+		"db_type": settings.DATABASE_TYPE,
+		"db_path": settings.DATABASE_PATH,
+		"db_host": settings.DATABASE_HOST,
+		"db_user": settings.DATABASE_USER,
+		"db_pass": settings.DATABASE_PASS,
+		"db_name": settings.DATABASE_NAME,
+	}
+	return pysql_wrapper(**pysql_conf)
 
 def hash_pass(username, password, salt = settings.PASSWORD_SALT):
 	import hashlib
-	username = username.lower()
+	username = username.lower() # Regardless of casing, provides the same hash.
 	return hashlib.sha256(salt + password + username + salt).hexdigest()
 
 @app.before_request
 def before_request():
-	get_connection()
+	pass
 
 @app.teardown_request
 def teardown_request(exception):
-	if hasattr(g, '_db'):
-		g._db.close()
+	pass
 
 def get_login():
 	'''True or False depending on if the user is authenticated.
@@ -107,7 +111,7 @@ def requires_login(return_page=None):
 			return redirect(url_for('login'))
 		username = request.form['le-username']
 		password = request.form['le-password']
-		records = query_db("SELECT * FROM `users` WHERE `username` = ? AND `password` = ?", [username, hash_pass(username, password)])
+		records = pysql().where('username', username).where('password', hash_pass(username, password)).get('users')
 		if len(records) != 1:
 			flash("Sorry, the username or password was incorrect.", 'error')
 			return redirect(url_for('login'))
