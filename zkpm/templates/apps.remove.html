@@ -1,0 +1,36 @@
+{% extends "layout.html" %}
+{% block title %}Apps/Manage{% endblock %}
+{% block header %}ZK - Apps/Manage{% endblock %}
+{% block content %}
+<p>
+<table style="margin-left: 0;" class="one-column-emphasis" summary="ZK App Management">
+	<thead>
+	<tr>
+   		<th scope="col">ID</th>
+		<th scope="col">Name</th>
+		<th scope="col">Language</th>
+		<th scope="col">Active</th>
+		<th scope="col">Version</th>
+		<th scope="col">Users</th>
+	</tr>
+	</thead>
+	<tbody>
+	<tr>
+		<td>{{ app.id }}</td>
+		<td>{{ app.name }}</td>
+		<td>{{ app.language }}</td>
+		<td>{% if app.active == 1 %}Yes{% else %}No{% endif %}</td>
+		<td>{{ app.version }}</td>
+		<td>{{ app.users }}</td>
+	</tr>
+</tbody>
+</table>
+</p>
+<p>
+	Are you sure you want to remove this app?
+	<form method="POST" action="{{ url_for('app_remove', id=id) }}">
+		<input type="hidden" id="le-shiggy-diggy" name="le-shiggy-diggy" value="{{ shiggy_diggy }}" />
+		<input type="submit" id="le-submit" name="le-submit" value="Remove" />
+	</form>
+</p>
+{% endblock %}

@@ -1,0 +1,128 @@
+{% extends "layout.html" %}
+{% block head %}
+	{{ super() }}
+	<style type="text/css">
+	/**
+	 Some nasty workarounds because of the fact you
+	 can't have multiple <form> elements inside a <table>.
+	**/
+	.one-column-emphasis {
+		margin: auto 0;
+	}
+	form {
+		margin: 0 auto;
+		padding: 0;
+	}
+	td.work-three {
+		width: 95px;
+	}
+	td.work-two {
+		text-align: left;
+	}
+	td.work-one {
+		width: 80px;
+	}
+	input[type="submit"] {
+		width: 70px;
+	}
+	</style>
+{% endblock %}
+{% block title %}Apps/Edit{% endblock %}
+{% block header %}ZK - Apps/Edit{% endblock %}
+{% block content %}
+<p>
+	<form method="POST" action="{{ url_for('app_edit', id=id) }}">
+	<table class="one-column-emphasis first" style="width: 500px;" summary="ZK App Management">
+	<tbody>
+		<tr>
+			<input type="hidden" id="le-type" name="le-type" value="name" />
+			<td class="work-one">
+				<label for="le-name">App Name</label>
+			</td>
+			<td class="work-two">
+				<input type="text" id="le-name" name="le-name" maxlength="64" value="{{ app.name }}"/>
+			</td>
+			<td class="work-three"><input type="submit" id="le-submit" name="le-submit" value="Update" /></td>
+		</tr>
+	</tbody>
+	</table>
+	</form>
+	<form method="POST" action="{{ url_for('app_edit', id=id) }}">
+	<table class="one-column-emphasis first" style="width: 500px;" summary="ZK App Management">
+	<tbody>
+		<tr>
+			<input type="hidden" id="le-type" name="le-type" value="language" />
+			<td class="work-one">
+				<label for="le-language">Language</label>
+			</td>
+			<td class="work-two">
+				<select id="le-language" name="le-language" style="width: 35%;">
+					{% if def_language %}
+						{% for language in languages %}
+						<option value="{{ language }}"{% if language == app.language %} selected{% endif %}>{{ language }}</option>
+						{% endfor %}
+						<option id="option-other" value="Other">Other</option>
+						<input type="text" id="le-other-language" name="le-other-language" maxlength="32" style="width: 85px; display: none;" value="" />
+					{% else %}
+						{% for language in languages %}
+						<option value="{{ language }}">{{ language }}</option>
+						{% endfor %}
+						<option id="option-other" value="Other" selected>Other</option>
+						<input type="text" id="le-other-language" name="le-other-language" 
+							style="width: 85px;" maxlength="32" value="{{ app.language }}"/>
+					{% endif %}
+				</select>
+			</td>
+			<td class="work-three"><input type="submit" id="le-submit" name="le-submit" value="Update" /></td>
+		</tr>
+	</tbody>
+	</table>
+	</form>
+	<form method="POST" action="{{ url_for('app_edit', id=id) }}">
+	<table class="one-column-emphasis first" style="width: 500px;" summary="ZK App Management">
+	<tbody>
+		<tr>
+	
+			<input type="hidden" id="le-type" name="le-type" value="active" />
+			<td class="work-one">
+				<label for="le-active">Active</label>
+			</td>
+			<td class="work-two">
+				<select id="le-active" name="le-active">
+					<option value="yes" {% if app.active == 1 %}selected{% endif %}>Yes</option>
+					<option value="no" {%if app.active == 0 %}selected{% endif %}>No</option>
+				</select>
+			</td>
+			<td class="work-three"><input type="submit" id="le-submit" name="le-submit" value="Update" /></td>
+		</tr>
+	</tbody>
+	</table>
+	</form>
+	<form method="POST" action="{{ url_for('app_edit', id=id) }}">
+	<table class="one-column-emphasis first" style="width: 500px;" summary="ZK App Management">
+	<tbody>
+		<tr>
+	
+			<input type="hidden" id="le-type" name="le-type" value="version" />
+			<td class="work-one">
+				<label for="le-version">Version</label>
+			</td>
+			<td class="work-two">
+				<input type="text" id="le-version" name="le-version" value="{{ app.version }}" disabled/>
+			</td>
+			<td class="work-three"><input type="submit" id="le-submit" name="le-submit" value="Push" /></td>
+		</tr>
+	</tbody>
+	</table>
+	</form>
+</p>
+<script type="text/javascript">
+	$('#le-language').change(function() {
+		if ($('#le-language').val() == "Other") {
+			$('#le-other-language').css('display', 'inline-block');
+		} else {
+			$('#le-other-language').css('display', 'none');
+		}
+	});
+</script>
+{% endblock %}

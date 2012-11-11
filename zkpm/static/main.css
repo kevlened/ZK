@@ -8,7 +8,7 @@ body {
 
 .container_12 {
   color: #000000;
-  background-color: #EBF2F5;/*#DCDCCC;*/
+  background-color: #EBF2F5;
   border: solid #3F3F3F 2px;
 }
 
@@ -22,9 +22,7 @@ body {
 }
 
 .transition_div {
-  background-color: #FFFAF0;/*#70DBDB;*
-  /*background-image: url('/static/stripes.png');*/
-  /*opacity: 0.8;*/
+  background-color: #FFFAF0;
   border: none;
 }
 .logo_text {
@@ -63,4 +61,87 @@ a:hover, a:active {
 
 a.no_hover:link, a.no_hover:hover, a.no_hover:visited, a.no_hover:active {
   color: inherit;
+}
+
+.one-column-emphasis
+{
+  font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+  font-size: 12px;
+  margin: 45px;
+  width: 600px;
+  text-align: left;
+  border-collapse: collapse;
+}
+
+.one-column-emphasis th
+{
+  font-size: 14px;
+  font-weight: normal;
+  padding: 12px 15px;
+  color: #039;
+}
+
+.one-column-emphasis td
+{
+  padding: 10px 15px;
+  color: #669;
+  border-top: 1px solid #e8edff;
+}
+
+.oce-first
+{
+  background: #d0dafd;
+  border-right: 10px solid transparent;
+  border-left: 10px solid transparent;
+}
+
+.one-column-emphasis tr:hover td
+{
+  color: #339;
+  background: #d6ddff;
+}
+
+.one-column-emphasis tr:hover .green
+{
+  color: #4DBD33;
+}
+.one-column-emphasis tr:hover .red
+{
+  color: #F00;
+}
+
+.flash {
+  /* So we can timeout flashed messages. */
+}
+
+.flash-info, .flash-success, .flash-warning, .flash-error {
+  border: 1px solid;
+  /* top right bottom left */
+  margin: 5px 0px;
+  padding: 2px 2px 2px 2px;
+  width: 500px; 
+  font: bold 12px verdana;
+  -moz-box-shadow: 0 0 5px #888;
+  -webkit-box-shadow: 0 0 5px#888;
+  box-shadow: 0 0 5px #888;
+  text-shadow: 2px 2px 2px #ccc;
+  -webkit-border-radius: 15px;
+  -moz-border-radius: 15px;
+  border-radius: 5px;
+}
+.flash-info {
+  color: #00529B;
+  background: #BDE5F8;
+}
+.flash-success {
+  color: #4F8A10;
+  background: #DFF2BF;
+}
+.flash-warning {
+  color: #9F6000;
+  background: #FEEFB3;
+}
+.flash-error {
+  color: #D8000C;
+  background: #FFBABA;
 }

@@ -4,6 +4,7 @@ DROP TABLE IF EXISTS `licenses`;
 
 CREATE TABLE IF NOT EXISTS `users` ( -- People who can login.
 `id` INTEGER PRIMARY KEY,
+`login` varchar(32) NOT NULL,
 `username` varchar(32) NOT NULL,
 `password` varchar(64) NOT NULL, -- sha256() of hashed password.
 `email` text NOT NULL
@@ -19,6 +20,7 @@ CREATE TABLE IF NOT EXISTS `apps` ( -- Application list.
 
 CREATE TABLE IF NOT EXISTS `licenses` ( -- License list.
 `id` INTEGER PRIMARY KEY,
+`app` int NOT NULL DEFAULT '0', -- What app is it for?
 `user` varchar(64) NOT NULL, 	-- Who is it for?
 `key` varchar(64) NOT NULL, 	-- The key: WWWW-XXXX-YYYY-ZZZZ
 `needs_hwid` tinyint(1) NOT NULL DEFAULT '0',--Do we require a HWID match to use this key?

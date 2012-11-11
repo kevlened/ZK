@@ -5,34 +5,23 @@ from twisted.web.wsgi import WSGIResource
 from twisted.web.server import Site
 import settings
 import zk_flask # Setup the Flask app + frontend handle.
-
-class Logger():
-	def info(self, *args):
-		Logger.info(args)
-	
-	@staticmethod
-	def info(*args):
-		print '[INFO]',
-		for arg in args:
-			print arg,
-		print ''
+import logger
 
 class ZKProtocol(Protocol):
 
 	def __init__(self, factory):
 		self.factory = factory
-		self.logger = Logger()
 
 	def connectionMade(self):
 		self.ip, self.port = self.transport.getPeer().host, self.transport.getPeer().port
-		self.logger.info("Connection from {0}:{1}".format(self.ip, self.port))
+		logger.info("Connection from {0}:{1}".format(self.ip, self.port))
 		self.factory.clients.append(self)
 
 	def dataReceived(self, data):
 		print data
 
 	def connectionLost(self, reason):
-		self.logger.info("Client {0}:{1} disconnected ({2})".format(self.ip, self.port, reason))
+		logger.info("Client {0}:{1} disconnected ({2})".format(self.ip, self.port, reason))
 		self.factory.clients.remove(self)
 
 class ZKFactory(Factory):
@@ -50,8 +39,8 @@ site = Site(resource)
 reactor.listenTCP(int(settings.WEB_PORT), site)
 
 def main():
-	Logger.info('Running reactor.')
+	logger.info('Running reactor.')
 	reactor.run()
 
 def revision():
-	return 'r2'
+	return 'r3'

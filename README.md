@@ -31,6 +31,17 @@ Notes
 + If you're interested in the database schema, look at the `schema_sqlite3.sql` file.
 	+ `schema_mysql.sql` is three single line commands, because MySQL doesn't support `.executescript()` like sqlite. (Pah!)
 
+Contributions
+--
++ If you want to contribute, you should follow these rules:
+	+ Tabs, __not__ spaces.
+	+ UTF-8 files.
+	+ All form fields should be prefixed with `le-`. (So we know what's form input, and to make people cringe)
+	+ Var names should be `lowercase_with_underscores`
++ We're always interested in more examples for ZK client implementation.
+	+ Feel free to write more in any language we're lacking.
+	+ If you think you can improve one already here, feel free to pull it.
+
 Installation
 --
 + Download the latest version of ZK.
@@ -41,7 +52,7 @@ Installation
 + Follow the prompts and allow the database to be initialised and populated.
 + Run ZK: `python zkp.py`
 	+ You should probably generate a secret key here.
-	+ Visit http://yourhost:port/secret and put those in your settings file.
+	+ Visit http://yourhost:port/secret and put those in your settings file, restart ZK.
 
 Todo
 --
@@ -49,9 +60,19 @@ Todo
 + Backend + backend protocol.
 + Example clients in various languages to show implementation.
 + More robust logging.
++ Fix some scetchy workaround hacks:
+	+ HTML \<form\> + \<table\> hacks in `templates/apps.edit.html`.
+	+ MySQL schema + installing hacks. Probably not fixable, and not really a big issue.
 
 Status
 --
++ __r3__
+	+ Functionality of site coming together.
+	+ App management now completely functional.
+	+ More logging, where applicable.
+	+ Flashed messages now fade away.
+	+ A bit more security.
+	+ Small fixes to the login system. (Will require change to any table schemas)
 + __r2__
 	+ Changed to pysql-wrapper.
 	+ _Cleaned_ up the install function. (Required workarounds for MySQL, so it's not perfect.)

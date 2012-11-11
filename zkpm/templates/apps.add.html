@@ -1,0 +1,74 @@
+{% extends "layout.html" %}
+{% block head %}
+	{{ super() }}
+	<style type="text/css">
+		table.first tr td:first-child {
+			text-align: right;
+		}
+	</style>
+{% endblock %}
+{% block title %}Apps/Add{% endblock %}
+{% block header %}ZK - Apps/Add{% endblock %}
+{% block content %}
+<noscript>
+	<p>
+		This page <strong>requires</strong> JavaScript, if you want to input your own language.
+	</p>
+</noscript>
+<p>
+	<table class="one-column-emphasis first" style="width: 500px;" summary="ZK App Management">
+	<tbody>
+	<form method="POST" action="{{ url_for('app_add') }}">
+		<tr>
+			<td>
+				<label for="le-name">App Name</label>
+			</td>
+			<td>
+				<input type="text" id="le-name" maxlength="64" name="le-name" />
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<label for="le-language">Language</label>
+			</td>
+			<td>
+				<select id="le-language" name="le-language" style="width: 25%;">
+					{% for language in languages %}
+					<option value="{{ language }}"{% if loop.index == 1 %} selected{% endif %}>{{ language }}</option>
+					{% endfor %}
+					<option id="option-other" value="Other">Other</option>
+					<!-- <script> is at bottom of <body> -->
+				</select>
+				<input type="text" id="le-other-language" name="le-other-language" maxlength="32" style="width: 85px; display: none;" />
+			</td>
+		</tr>
+		<tr>
+			<td>Active</td>
+			<td>
+				<select id="le-active" name="le-active">
+					<option value="yes" selected>Yes</option>
+					<option value="no">No</option>
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<input type="submit" id="le-submit" name="le-submit" value="&#10010; Add" />
+			</td>
+			<td>
+			</td>
+		</tr>
+	</form>
+	</tbody>
+	</table>
+</p>
+<script type="text/javascript">
+	$('#le-language').change(function() {
+		if ($('#le-language').val() == "Other") {
+			$('#le-other-language').css('display', 'inline-block');
+		} else {
+			$('#le-other-language').css('display', 'none');
+		}
+	});
+</script>
+{% endblock %}

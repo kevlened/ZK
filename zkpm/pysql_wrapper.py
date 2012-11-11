@@ -174,6 +174,10 @@ class pysql_wrapper:
 		self._query = "INSERT INTO `{0}`".format(table_name)
 		stmt, data = self._build_query(table_data=table_data)
 		res  = self._execute(stmt, data)
+		if self._affected_rows > 0:
+			res = True
+		else:
+			res = False
 		self._reset()
 		return res
 
@@ -245,10 +249,7 @@ class pysql_wrapper:
 
 	def _execute(self, query, data=()):
 		self._cursor.execute(query, data)
-		if self._db_type == 'sqlite':
-			self._cursor.commit()
-		elif self._db_type == 'mysql':
-			self._dbc.commit()
+		self._dbc.commit()
 		res = self._cursor.fetchall()
 		self._affected_rows = int(self._cursor.rowcount)
 		return res

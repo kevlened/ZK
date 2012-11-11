@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
+
 # Disable this in a production environment.
 # This enables Flask's debugger.
-DEBUG = False
+DEBUG = True
 
 # --- Webserver Settings ---
 # The port and host which the web front will bind to.

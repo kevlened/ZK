@@ -23,7 +23,7 @@ def init_db():
 	if db_t == 'sqlite':
 		with open('zkpm{0}{1}'.format(os.sep, schema), 'rb') as f:
 			pysql._cursor.executescript(f.read())
-			pysql._cursor.commit()
+			pysql._dbc.commit()
 	elif db_t == 'mysql':
 		with open('zkpm{0}{1}'.format(os.sep, schema), 'rb') as f:
 			for line in f.readlines():
@@ -54,6 +54,7 @@ def gather_details():
 def submit_details(username, password, email):
 	pysql = pysql_()
 	data = {
+		"login": username.lower(),
 		"username": username,
 		"password": hash_pass(username, password),
 		"email": email
@@ -61,7 +62,7 @@ def submit_details(username, password, email):
 	pysql.insert('users', data)
 
 def main():
-	if settings.DATABASE_TYPE.lower() in ('sqlite', 'sqlite3') and os.path.isfile(settings.DATABASE):
+	if settings.DATABASE_TYPE.lower() in ('sqlite', 'sqlite3') and os.path.isfile(settings.DATABASE_PATH):
 		print 'Sorry, it appears the ZK database you\'ve selected already exists.'
 		print 'Either delete your database file, or change it to a different file in the settings file.'
 		sys.exit(1)
