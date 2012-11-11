@@ -30,8 +30,8 @@ if __name__ == '__main__':
 			main()
 			sys.exit(0)
 		elif sys.argv[1] in ('-v', '--version'):
-			from zkpm.master import version
-			print 'ZK ',version()
+			from zkpm.master import revision
+			print 'ZK ',revision()
 			sys.exit(0)
 	
 	try:
