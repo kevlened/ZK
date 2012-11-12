@@ -1,0 +1,36 @@
+{% extends "layout.html" %}
+{% block title %}Keys/Manage{% endblock %}
+{% block header %}ZK - Keys/Manage{% endblock %}
+{% block content %}
+<p>
+<table style="margin-left: 0;" class="one-column-emphasis" summary="ZK App Management">
+	<thead>
+	<tr>
+   		<th scope="col">ID</th>
+		<th scope="col">User</th>
+		<th scope="col">License</th>
+		<th scope="col">App</th>
+		<th scope="col">Disabled</th>
+		<th scope="col">Expires</th>
+	</tr>
+	</thead>
+	<tbody>
+	<tr>
+		<td>{{ key.id }}</td>
+		<td>{{ key.user }}</td>
+		<td>{{ key.key }}</td>
+		<td>{{ key.app }}</td>
+		<td>{{ key.disabled }}</td>
+		<td>{{ key.expires }}</td>
+	</tr>
+</tbody>
+</table>
+</p>
+<p>
+	Are you sure you want to remove this license?
+	<form method="POST" action="{{ url_for('key_remove', id=id) }}">
+		<input type="hidden" id="le-shiggy-diggy" name="le-shiggy-diggy" value="{{ shiggy_diggy }}" />
+		<input type="submit" id="le-submit" name="le-submit" value="Remove" />
+	</form>
+</p>
+{% endblock %}

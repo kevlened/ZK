@@ -1,0 +1,285 @@
+{% extends "layout.html" %}
+{% block head %}
+	{{ super() }}
+	<style type="text/css">
+	/**
+	 Some nasty workarounds because of the fact you
+	 can't have multiple <form> elements inside a <table>.
+	**/
+	.one-column-emphasis {
+		margin: auto 0;
+	}
+	form {
+		margin: 0 auto;
+		padding: 0;
+	}
+	td.work-three {
+		width: 95px;
+	}
+	td.work-two {
+		text-align: left;
+	}
+	td.work-one {
+		text-align: right;
+		width: 80px;
+	}
+	input[type="submit"] {
+		width: 70px;
+	}
+	input[type="text"], input[type="password"] {
+		width: 180px;
+	}
+	button.button {
+		width: 30px;
+		height: 20px;
+	}
+	input[type="numeric"] {
+		width: 40px;
+	}
+	table.expires td {
+		padding: 0;
+	}
+	table.expires td:first-child {
+		text-align: right;
+	}
+	td.i {
+		padding-left: 5px;
+	}
+	</style>
+{% endblock %}
+{% block title %}Keys/Edit{% endblock %}
+{% block header %}ZK - Keys/Edit{% endblock %}
+{% block content %}
+<noscript>
+	<p>
+		This page <strong>requires</strong> JavaScript if you want to modify the expiration on your keys.
+	</p>
+</noscript>
+<p>
+	<form method="POST" action="{{ url_for('key_edit', id=id) }}">
+	<input type="hidden" id="le-shiggy-diggy" name="le-shiggy-diggy" value="{{ shiggy_diggy }}" />
+	<table class="one-column-emphasis first" style="width: 500px;" summary="ZK License Management">
+	<tbody>
+		<tr>
+			<input type="hidden" id="le-type" name="le-type" value="app" />
+			<td class="work-one">
+				<label for="le-app">App</label>
+			</td>
+			<td class="work-two">
+				<select id="le-app" name="le-app">
+				{% for app in apps %}
+					<option value="{{ app.id }}" {% if app.selected %}selected{% endif %}>{{ app.name }}</option>
+				{% endfor %}
+				</select>
+			</td>
+			<td class="work-three"><input type="submit" id="le-submit" name="le-submit" value="Update" /></td>
+		</tr>
+	</tbody>
+	</table>
+	</form>
+
+	<form method="POST" action="{{ url_for('key_edit', id=id) }}">
+		<input type="hidden" id="le-shiggy-diggy" name="le-shiggy-diggy" value="{{ shiggy_diggy }}" />
+	<table class="one-column-emphasis first" style="width: 500px;" summary="ZK License Management">
+	<tbody>
+		<tr>
+			<input type="hidden" id="le-type" name="le-type" value="name" />
+			<td class="work-one">
+				<label for="le-name">User</label>
+			</td>
+			<td class="work-two">
+				<input type="text" id="le-name" name="le-name" maxlength="64" value="{{ key.user }}"/>
+			</td>
+			<td class="work-three"><input type="submit" id="le-submit" name="le-submit" value="Update" /></td>
+		</tr>
+	</tbody>
+	</table>
+	</form>
+
+	<form method="POST" action="{{ url_for('key_edit', id=id) }}">
+		<input type="hidden" id="le-shiggy-diggy" name="le-shiggy-diggy" value="{{ shiggy_diggy }}" />
+	<table class="one-column-emphasis first" style="width: 500px;" summary="ZK License Management">
+	<tbody>
+		<tr>
+			<input type="hidden" id="le-type" name="le-type" value="email" />
+			<td class="work-one">
+				<label for="le-email">Email</label>
+			</td>
+			<td class="work-two">
+				<input type="text" id="le-email" name="le-email" maxlength="64" value="{{ key.email }}"/>
+			</td>
+			<td class="work-three"><input type="submit" id="le-submit" name="le-submit" value="Update" /></td>
+		</tr>
+	</tbody>
+	</table>
+	</form>
+
+	<form method="POST" action="{{ url_for('key_edit', id=id) }}">
+		<input type="hidden" id="le-shiggy-diggy" name="le-shiggy-diggy" value="{{ shiggy_diggy }}" />
+	<table class="one-column-emphasis first" style="width: 500px;" summary="ZK License Management">
+	<tbody>
+		<tr>
+			<input type="hidden" id="le-type" name="le-type" value="license" />
+			<td class="work-one">
+				<label for="le-license">License</label>
+			</td>
+			<td class="work-two">
+				<input type="text" id="le-license" name="le-license" maxlength="64" value="{{ key.key }}" disabled />
+			</td>
+			<td class="work-three"><input type="submit" id="le-submit" name="le-submit" value="Regen" /></td>
+		</tr>
+	</tbody>
+	</table>
+	</form>
+
+	<form method="POST" action="{{ url_for('key_edit', id=id) }}">
+		<input type="hidden" id="le-shiggy-diggy" name="le-shiggy-diggy" value="{{ shiggy_diggy }}" />
+	<table class="one-column-emphasis first" style="width: 500px;" summary="ZK License Management">
+	<tbody>
+		<tr>
+	
+			<input type="hidden" id="le-type" name="le-type" value="needs-hwid" />
+			<td class="work-one">
+				<label for="le-needs-hwid">Needs HWID</label>
+			</td>
+			<td class="work-two">
+				<select id="le-needs-hwid" name="le-needs-hwid">
+					<option value="yes" {% if key.needs_hwid == 1 %}selected{% endif %}>Yes</option>
+					<option value="no" {%if key.needs_hwid == 0 %}selected{% endif %}>No</option>
+				</select>
+			</td>
+			<td class="work-three"><input type="submit" id="le-submit" name="le-submit" value="Update" /></td>
+		</tr>
+	</tbody>
+	</table>
+	</form>
+
+	<form method="POST" action="{{ url_for('key_edit', id=id) }}">
+		<input type="hidden" id="le-shiggy-diggy" name="le-shiggy-diggy" value="{{ shiggy_diggy }}" />
+	<table class="one-column-emphasis first" style="width: 500px;" summary="ZK License Management">
+	<tbody>
+		<tr>
+			<input type="hidden" id="le-type" name="le-type" value="hwid" />
+			<td class="work-one">
+				<label for="le-hwid">HWID</label>
+			</td>
+			<td class="work-two">
+				<input type="text" id="le-hwid" name="le-hwid" maxlength="64" value="{{ key.hwid }}" disabled/>
+			</td>
+			<td class="work-three"><input type="submit" id="le-submit" name="le-submit" value="Reset" /></td>
+		</tr>
+	</tbody>
+	</table>
+	</form>
+
+	<form method="POST" action="{{ url_for('key_edit', id=id) }}">
+		<input type="hidden" id="le-shiggy-diggy" name="le-shiggy-diggy" value="{{ shiggy_diggy }}" />
+	<table class="one-column-emphasis first" style="width: 500px;" summary="ZK License Management">
+	<tbody>
+		<tr>
+	
+			<input type="hidden" id="le-type" name="le-type" value="disabled" />
+			<td class="work-one">
+				<label for="le-disabled">Disabled</label>
+			</td>
+			<td class="work-two">
+				<select id="le-disabled" name="le-disabled">
+					<option value="yes" {% if key.disabled == 1 %}selected{% endif %}>Yes</option>
+					<option value="no" {%if key.disabled == 0 %}selected{% endif %}>No</option>
+				</select>
+			</td>
+			<td class="work-three"><input type="submit" id="le-submit" name="le-submit" value="Update" /></td>
+		</tr>
+	</tbody>
+	</table>
+	</form>
+
+	<form method="POST" action="{{ url_for('key_edit', id=id) }}">
+		<input type="hidden" id="le-shiggy-diggy" name="le-shiggy-diggy" value="{{ shiggy_diggy }}" />
+	<table class="one-column-emphasis first" style="width: 500px;" summary="ZK License Management">
+	<tbody>
+		<tr>
+	
+			<input type="hidden" id="le-type" name="le-type" value="expires" />
+			<td class="work-one">
+				<label for="le-expires-select">Expires</label>
+			</td>
+			<td class="work-two">
+				<select id="le-expires-select" name="le-expires-select">
+					<option value="yes" {% if key.expires != 0 %}selected{% endif %}>Yes</option>
+					<option value="no" {% if key.expires == 0 %}selected{% endif %}>No</option>
+				</select>
+				<div class="expires" style="{% if key.expires == 0 %}display: none;{% endif %}">
+					<table border="0" class="expires">
+					<tr>
+					<div class="expires-inner">
+						<td><label for="le-expires-hours">Hours</label></td>
+						<td class="i"><input type="numeric" id="le-expires-hours" name="le-expires-hours" value="{{ key.expires_.hours }}" /></td>
+					</div>
+					</tr>
+					<tr>
+					<div class="expires-inner">
+						<td><label for="le-expires-days">Days</label></td>
+						<td class="i"><input type="numeric" id="le-expires-days" name="le-expires-days" value="{{ key.expires_.days }}" /></td>
+					</div>
+					</tr>
+					<tr>
+					<div class="expires-inner">
+						<td><label for="le-expires-weeks">Weeks</label></td>
+						<td class="i"><input type="numeric" id="le-expires-weeks" name="le-expires-weeks" value="{{ key.expires_.weeks }}" /></td>
+					</div>
+					</tr>
+					<tr>
+					<div class="expires-inner">
+						<td><label for="le-expires-months">Months</label></td>
+						<td class="i"><input type="numeric" id="le-expires-months" name="le-expires-months" value="{{ key.expires_.months }}" /></td>
+					</div>
+					</tr>
+					<tr>
+					<div class="expires-inner">
+						<td><label for="le-expires-years">Years</label></td>
+						<td class="i"><input type="numeric" id="le-expires-years" name="le-expires-years" value="{{ key.expires_.years }}" /></td>
+					</div>
+					</tr>
+					</table>
+				</div>
+			</td>
+			<td class="work-three"><input type="submit" id="le-submit" name="le-submit" value="Update" /></td>
+		</tr>
+	</tbody>
+	</table>
+	</form>
+</p>
+<script type="text/javascript">
+$(function() {
+    $('td.i').append('<button class="inc button">&#10010;</button><button class="dec button"><b>&minus;</b></button>');
+});
+
+$(document).ready(function() {
+	$('.button').unbind('click');
+	$('.button').click(function() {
+	    var $button = $(this);
+	    var old_val = $button.parent().find("input").val();
+	    var new_val = old_val;
+
+	    if ($button.attr("class") == "inc button") {
+			new_val = parseFloat(old_val) + 1;
+		} else {
+			if (old_val >= 1) {
+				new_val = parseFloat(old_val) - 1;
+			}
+		}
+		$button.parent().find("input").val(new_val);
+		return false;
+	});
+
+	$('#le-expires-select').change(function() {
+		if ($('#le-expires-select').val() == "yes") {
+			$('.expires').css('display', 'inherit');
+		} else {
+			$('.expires').css('display', 'none');
+		}
+	});
+});
+</script>
+{% endblock %}

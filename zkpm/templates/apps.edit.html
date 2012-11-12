@@ -20,6 +20,7 @@
 		text-align: left;
 	}
 	td.work-one {
+		text-align: right;
 		width: 80px;
 	}
 	input[type="submit"] {
@@ -32,6 +33,7 @@
 {% block content %}
 <p>
 	<form method="POST" action="{{ url_for('app_edit', id=id) }}">
+		<input type="hidden" id="le-shiggy-diggy" name="le-shiggy-diggy" value="{{ shiggy_diggy }}" />
 	<table class="one-column-emphasis first" style="width: 500px;" summary="ZK App Management">
 	<tbody>
 		<tr>
@@ -48,6 +50,7 @@
 	</table>
 	</form>
 	<form method="POST" action="{{ url_for('app_edit', id=id) }}">
+		<input type="hidden" id="le-shiggy-diggy" name="le-shiggy-diggy" value="{{ shiggy_diggy }}" />
 	<table class="one-column-emphasis first" style="width: 500px;" summary="ZK App Management">
 	<tbody>
 		<tr>
@@ -79,6 +82,7 @@
 	</table>
 	</form>
 	<form method="POST" action="{{ url_for('app_edit', id=id) }}">
+		<input type="hidden" id="le-shiggy-diggy" name="le-shiggy-diggy" value="{{ shiggy_diggy }}" />
 	<table class="one-column-emphasis first" style="width: 500px;" summary="ZK App Management">
 	<tbody>
 		<tr>
@@ -99,6 +103,7 @@
 	</table>
 	</form>
 	<form method="POST" action="{{ url_for('app_edit', id=id) }}">
+		<input type="hidden" id="le-shiggy-diggy" name="le-shiggy-diggy" value="{{ shiggy_diggy }}" />
 	<table class="one-column-emphasis first" style="width: 500px;" summary="ZK App Management">
 	<tbody>
 		<tr>

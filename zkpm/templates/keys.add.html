@@ -1,0 +1,193 @@
+{% extends "layout.html" %}
+{% block head %}
+	{{ super() }}
+	<style type="text/css">
+		button.button {
+			width: 30px;
+			height: 20px;
+		}
+		input[type="numeric"] {
+			width: 40px;
+		}
+		table.expires td {
+			padding: 0;
+		}
+		td.i {
+			padding-left: 5px;
+		}
+	</style>
+{% endblock %}
+{% block title %}Keys/Add{% endblock %}
+{% block header %}ZK - Keys/Add{% endblock %}
+{% block content %}
+<noscript>
+	<p>
+		This page <strong>requires</strong> JavaScript if you want to create expiring keys.
+	</p>
+</noscript>
+<p>
+	<table class="one-column-emphasis first" style="width: 500px;" summary="ZK App Management">
+	<tbody>
+	<form method="POST" action="{{ url_for('key_add') }}">
+		<input type="hidden" id="le-shiggy-diggy" name="le-shiggy-diggy" value="{{ shiggy_diggy }}" />
+		<tr>
+			<td>
+				<label for="le-app">App</label>
+			</td>
+			<td>
+				<select id="le-app" name="le-app">
+					{% for app in apps %}
+					<option value="{{ app.id }}" {% if loop.index == 1 %}selected{% endif %}>{{ app.name }}</option>
+					{% endfor %}
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<label for="le-user">User</label>
+			</td>
+			<td>
+				<input type="text" id="le-user" maxlength="64" name="le-user" />
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<label for="le-email">Email</label>
+			</td>
+			<td>
+				<input type="text" id="le-email" maxlength="64" name="le-email" />
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<label for="le-needs-hwid">Needs HWID</label>
+			</td>
+			<td>
+				<select id="le-needs-hwid" name="le-needs-hwid">
+					<option value="no" selected>No</option>
+					<option value="yes">Yes</option>
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<label for="le-active">Active</label>
+			</td>
+			<td>
+				<select id="le-active" name="le-active">
+					<option value="yes" selected>Yes</option>
+					<option value="no">No</option>
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<label for="le-expires">Expires</label>
+			</td>
+			<td>
+				<input type="hidden" id="le-expires" name="le-expires" value="check" />
+				<select id="le-expires-select" name="le-expires-select">
+					<option value="no" selected>No</option>
+					<option value="yes">Yes</option>
+				</select>
+				<div class="expires" style="display: none;">
+					<table border="0" class="expires">
+					<tr>
+					<div class="expires-inner">
+						<td><label for="le-expires-hours">Hours</label></td>
+						<td class="i"><input type="numeric" id="le-expires-hours" name="le-expires-hours" value="0" /></td>
+					</div>
+					</tr>
+					<tr>
+					<div class="expires-inner">
+						<td><label for="le-expires-days">Days</label></td>
+						<td class="i"><input type="numeric" id="le-expires-days" name="le-expires-days" value="0" /></td>
+					</div>
+					</tr>
+					<tr>
+					<div class="expires-inner">
+						<td><label for="le-expires-weeks">Weeks</label></td>
+						<td class="i"><input type="numeric" id="le-expires-weeks" name="le-expires-weeks" value="0" /></td>
+					</div>
+					</tr>
+					<tr>
+					<div class="expires-inner">
+						<td><label for="le-expires-months">Months</label></td>
+						<td class="i"><input type="numeric" id="le-expires-months" name="le-expires-months" value="0" /></td>
+					</div>
+					</tr>
+					<tr>
+					<div class="expires-inner">
+						<td><label for="le-expires-years">Years</label></td>
+						<td class="i"><input type="numeric" id="le-expires-years" name="le-expires-years" value="0" /></td>
+					</div>
+					</tr>
+					</table>
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<label for="le-aban">Auto ban</label>
+			</td>
+			<td>
+				<select id="le-aban" name="le-aban">
+					<option value="no" selected>No</option>
+					<option value="yes">Yes</option>
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<label for="le-license-style">License style</label>
+			</td>
+			<td>
+				<select id="le-license-style" name="le-license-style">
+					<option value="1" selected>WWWW-XXXX-YYYY-ZZZZ</option>
+					<option value="2">MYAPP-XXXX-YYYY-ZZZZ</option>
+					<option value="3">WWWWXXXXYYYYZZZZ</option>
+				</select>
+		</tr>
+		<tr>
+			<td>
+				<input type="submit" id="le-submit" name="le-submit" value="&#10010; Add" />
+			</td>
+			<td>
+			</td>
+		</tr>
+	</form>
+	</tbody>
+	</table>
+</p>
+<script type="text/javascript">
+$(function() {
+    $('td.i').append('<button class="inc button">&#10010;</button><button class="dec button"><b>&minus;</b></button>');
+});
+
+$(document).ready(function() {
+	$('.button').click(function() {
+	    var $button = $(this);
+	    var old_val = $button.parent().find("input").val();
+	    var new_val = old_val;
+
+	    if ($button.attr("class") == "inc button") {
+			new_val = parseFloat(old_val) + 1;
+		} else {
+			if (old_val >= 1) {
+				new_val = parseFloat(old_val) - 1;
+			}
+		}
+		$button.parent().find("input").val(new_val);
+		return false;
+	});
+
+	$('#le-expires-select').change(function() {
+		if ($('#le-expires-select').val() == "yes") {
+			$('.expires').css('display', 'inherit');
+		} else {
+			$('.expires').css('display', 'none');
+		}
+	});
+});
+</script>
+{% endblock %}

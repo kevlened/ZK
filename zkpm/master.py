@@ -43,4 +43,4 @@ def main():
 	reactor.run()
 
 def revision():
-	return 'r3'
+	return 'r4-git'

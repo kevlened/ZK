@@ -1,8 +1,8 @@
 ZK (Protection)
-==
+===
 
 What is it?
---
+---
 ZK(P) started off as a simple idea by PigBacon, which was mostly based around the management of Minecraft clients. This was private and - since it was written in PHP - came with high overhead, wasn't extremely well implemented, and was just a general unpleasant beast to work with.
 
 Now it's a Python based management system which uses Flask as the front end for management, Twisted as the back end for communication, and sqlite for data storage.
@@ -11,7 +11,7 @@ This all rolls into one lovely bundle of joy.
 It is developed by _Chris_ and _Huey_.
 
 What do I need to run it?
---
+---
 + Python 2.7.3 (This is what I test with, 2.6.x should work, 3.x probably won't)
 + [Twisted Python](http://twistedmatrix.com)
 + [Flask](http://flask.pocoo.org)
@@ -21,7 +21,7 @@ What do I need to run it?
 	+ sqlite3 is the default, so that should be fine.
 
 Notes
---
+---
 + This uses a modified version of my [pysql-wrapper](https://github.com/PigBacon/pysql-wrapper).
 	+ The usage is the same, but it is modified to work with the multiple threading ideas of Flask.
 	+ A pysql_wrapper object is closed every time a query is executed, so you should make a new one before querying stuff.
@@ -32,7 +32,7 @@ Notes
 	+ `schema_mysql.sql` is three single line commands, because MySQL doesn't support `.executescript()` like sqlite. (Pah!)
 
 Contributions
---
+---
 + If you want to contribute, you should follow these rules:
 	+ Tabs, __not__ spaces.
 	+ UTF-8 files.
@@ -43,7 +43,7 @@ Contributions
 	+ If you think you can improve one already here, feel free to pull it.
 
 Installation
---
+---
 + Download the latest version of ZK.
 + Install the dependencies
 + Open `settings.py` and, if required, change anything you feel.
@@ -55,32 +55,41 @@ Installation
 	+ Visit http://yourhost:port/secret and put those in your settings file, restart ZK.
 
 Todo
---
-+ Complete front end management.
+---
 + Backend + backend protocol.
 + Example clients in various languages to show implementation.
 + More robust logging.
 + Fix some scetchy workaround hacks:
-	+ HTML \<form\> + \<table\> hacks in `templates/apps.edit.html`.
+	+ HTML \<form\> + \<table\> hacks in `apps.edit.html` and `keys.edit.html`.
 	+ MySQL schema + installing hacks. Probably not fixable, and not really a big issue.
++ Pagination for /app/manage and /key/manage. (Possibly just load more via JS)
++ Move key + app stuff into their own files, to make management easier.
 
 Status
---
-+ __r3__
-	+ Functionality of site coming together.
-	+ App management now completely functional.
-	+ More logging, where applicable.
-	+ Flashed messages now fade away.
-	+ A bit more security.
-	+ Small fixes to the login system. (Will require change to any table schemas)
-+ __r2__
-	+ Changed to pysql-wrapper.
-	+ _Cleaned_ up the install function. (Required workarounds for MySQL, so it's not perfect.)
-	+ Support for MySQL aswell as default sqlite3.
-	+ Misc bits of code cleanup.
-	+ Start of `/manage/app` and `/manage/key` web pages. (Currently execute `abort(418)`.)
-+ __r1__
-	+ Front end mostly functional
-	+ Template works
-	+ Twisted backend is useless but functioning
-	+ KVSession is handling everything correctly and securely
+---
+### r4
++ Key management now completely functional.
++ Added le-shiggy-diggy form security. This will stop XSS hijack attempts.
++ Added decent expiry system.
++ Made removing an app remove all attached licenses.
+
+### r3
++ Functionality of site coming together.
++ App management now completely functional.
++ More logging, where applicable.
++ Flashed messages now fade away.
++ A bit more security.
++ Small fixes to the login system. (Will require change to any table schemas)
+
+### r2
++ Changed to pysql-wrapper.
++ _Cleaned_ up the install function. (Required workarounds for MySQL, so it's not perfect.)
++ Support for MySQL aswell as default sqlite3.
++ Misc bits of code cleanup.
++ Start of `/manage/app` and `/manage/key` web pages. (Currently execute `abort(418)`.)
+
+### r1
++ Front end mostly functional
++ Template works
++ Twisted backend is useless but functioning
++ KVSession is handling everything correctly and securely

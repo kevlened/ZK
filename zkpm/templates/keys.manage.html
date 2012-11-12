@@ -1,0 +1,47 @@
+{% extends "layout.html" %}
+{% block title %}Keys/Manage{% endblock %}
+{% block header %}ZK - Keys/Manage{% endblock %}
+{% block content %}
+	<p>
+		This is your license key management panel.<br />
+		From here, you can add, edit and remove your license keys.
+	</p>
+	<table style="width: 700px;" class="one-column-emphasis" summary="ZK App Management">
+	<thead>
+		<tr>
+	   		<th scope="col">ID</th>
+			<th scope="col">User</th>
+			<th scope="col">License</th>
+			<th scope="col">App</th>
+			<th scope="col">Disabled</th>
+			<th scope="col">Expires</th>
+			<th scope="col">Action</th>
+		</tr>
+	</thead>
+	<tbody>
+	{% if keys %}
+		{% for key in keys %}
+			<tr>
+				<td>{{ key.id }}</td>
+				<td>{{ key.user }}</td>
+				<td style="width: 150px;">{{ key.key }}</td>
+				<td>{{ key.app_str }}</td>
+				<td>{% if key.disabled == 1 %}Yes{% else %}No{% endif %}</td>
+				<td>{{ key.expires }}</td>
+				<td style="font-size: 150%;">
+					<a class="green" href="{{ url_for('key_edit', id=key.id) }}">&#10000;</a>
+					<a class="red" href="{{ url_for('key_remove', id=key.id) }}">&#10006;</a>
+					<!-- checkmark: &#10004; plus: &#10010;-->
+				</td>
+			</tr>
+		{% endfor %}
+	{% endif %}
+	<tr>
+		<!-- Do the padding on the <a> so that it takes up the whole row. -->
+		<td colspan="7" style="padding: 0">
+			<a style="display: block; padding: 10px 15px 10px 15px;" href="{{ url_for('key_add') }}">&#10010; Add a new key.</a>
+		</td>
+	</tr>
+	</tbody>
+	</table>
+{% endblock %}

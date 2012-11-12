@@ -22,11 +22,12 @@ CREATE TABLE IF NOT EXISTS `licenses` ( -- License list.
 `id` INTEGER PRIMARY KEY,
 `app` int NOT NULL DEFAULT '0', -- What app is it for?
 `user` varchar(64) NOT NULL, 	-- Who is it for?
+`email` varchar(64) NOT NULL,	-- What's their email? (If applicable)
 `key` varchar(64) NOT NULL, 	-- The key: WWWW-XXXX-YYYY-ZZZZ
 `needs_hwid` tinyint(1) NOT NULL DEFAULT '0',--Do we require a HWID match to use this key?
 `hwid` varchar(64) NOT NULL,				-- If we need a HWID, what is it?
 `disabled` tinyint(1) NOT NULL DEFAULT '0', -- Is the key disabled?
 `expires` int(10) NOT NULL DEFAULT '0', 	-- Unix timestamp of expiration date, or 0 for never.
 `last_use` int(10) NOT NULL DEFAULT '0',	-- Unix timestamp of the last use of the key.
-`aban` tinyint(1) NOT NULL DEFAULT '0'		-- Should users of this key automatically get an IP ban?
+`aban` tinyint(1) NOT NULL DEFAULT '0'		-- NOT IMPLEMENTED - Should users of this key automatically get an IP ban?
 );
