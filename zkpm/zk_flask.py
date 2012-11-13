@@ -9,8 +9,7 @@ app.debug = settings.DEBUG
 app.secret_key = settings.SECRET_KEY
 
 # Just a const list used in the templates.
-languages = ['C++', 'C#', 'Java', 'Node', 'Perl', 
-			 'Python', 'Rails', 'Ruby', 'VB', 'VB.NET']
+languages = ['C++', 'C#', 'Java', 'Node', 'Perl',  'Python', 'Rails', 'Ruby', 'VB', 'VB.NET']
 
 """
 If you want to make a page require a login, do this:
@@ -592,7 +591,7 @@ def shiggy_match():
 		return False
 	# Make sure they iniated this.
 	if request.form['le-shiggy-diggy'] != session['shiggy_diggy']:
-		logger.warning("User", get_username(), "failed shiggy-diggy tests.", "Hijack attempt?")
+		logger.warning("User", get_username(), "failed shiggy-diggy tests.", "Possible cross site request attack?")
 		del session['shiggy_diggy']
 		return False
 	return True

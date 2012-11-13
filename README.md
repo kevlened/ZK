@@ -69,7 +69,7 @@ Status
 ---
 ### r4
 + Key management now completely functional.
-+ Added le-shiggy-diggy form security. This will stop XSS hijack attempts.
++ Added le-shiggy-diggy form security. This will stop cross site request attack attempts.
 + Added decent expiry system.
 + Made removing an app remove all attached licenses.
 
