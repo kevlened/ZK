@@ -1,7 +1,16 @@
 # -*- coding: utf-8 -*-
+import settings
 	
 def info(*args):
 	print '[ INF ]',
+	for arg in args:
+		print arg,
+	print ''
+
+def debug(*args):
+	if not settings.DEBUG:
+		return
+	print '[ DBG ]',
 	for arg in args:
 		print arg,
 	print ''

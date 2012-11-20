@@ -46,15 +46,21 @@ def timestamp_from_str(str_):
 	timestamp = add(result['years'], 60 * 60 * 24 * 7 * 4 * 12, timestamp)
 	return timestamp
 
-def expires_str(stamp):
+def expires_str(stamp, id=None, expired=False):
 	"""Somewhat hacky method to turn a timestamp into a nicely formatted string.
 
 		Could be significantly cleaned up if dictionaries stayed in order.
 	"""
-	if stamp == 0:
-		return 'Never'
 	from datetime import datetime, timedelta
 	import time
+
+	if stamp == 0:
+		return 'Never'
+	if stamp == -1 or stamp <= int(time.time()):
+		if id is not None and not expired:
+			import zk_flask
+			zk_flask.expire_key(id)
+		return 'Expired'
 	diff = (datetime.fromtimestamp(stamp) - datetime.now())
 	secs = diff.seconds
 	if diff.days > 0:
@@ -160,7 +166,7 @@ def key_from_style(style=1, app=""):
 		out = ''.join(key)
 	elif style == 2:
 		clean_app = re.sub('[^a-zA-Z0-9]', '', app)
-		key.append(clean_app[:5])
+		key.append(clean_app[:5].upper())
 		for x in range(4):
 			bits = string.ascii_uppercase + string.digits
 			key.append(''.join(random.choice(bits) for x in range(4)))

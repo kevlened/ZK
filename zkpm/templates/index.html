@@ -1,6 +1,13 @@
 {% extends "layout.html" %}
 {% block title %}Home{% endblock %}
-{% block header %}ZK (Protection){% endblock %}
+{% block header %}ZK - Home{% endblock %}
 {% block content %}
-		This is le test. lelelele
+<p>
+	Welcome to your ZK online management panel, <b>{{ login }}</b>.<br />
+	From here you can control your applications and license keys online.
+</p>
+<p>
+	You're using <b>ZK {{ revision() }}</b> written by <i>Chris and Huey</i>.<br />
+	It's totally open source, and you can check it out by clicking on the banner to the top right.
+</p>
 {% endblock %}

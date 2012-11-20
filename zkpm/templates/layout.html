@@ -41,6 +41,7 @@
 			{% else %}
 			<a href="/login">Login</a>
 			{% endif %}
+			<span class="right">{{ revision() }}</span>
 		</div>
 	</div>
 	<div class="container_12 content">
@@ -66,7 +67,7 @@
 			$('#flashes p').each(function(index) {
 				setTimeout(function() {
 					var p = '.flash-num-' + (index + 1);
-					$(p).fadeOut("slow", function() {
+					$(p).slideUp("slow", function() {
 						$(p).remove();
 					})
 				}, next_timer);

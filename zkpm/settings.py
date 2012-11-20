@@ -2,7 +2,8 @@
 
 # Disable this in a production environment.
 # This enables Flask's debugger.
-DEBUG = True
+# Good if something is going wrong and you want to yell at the ZK devs.
+DEBUG = False
 
 # --- Webserver Settings ---
 # The port and host which the web front will bind to.
@@ -28,7 +29,7 @@ DATABASE_NAME = "test"
 # If you're using sqlite, give us a database file to work with.
 DATABASE_PATH = "zk.db"
 
-# --- Secret Settings ---
+# --- Misc Settings ---
 
 # This should be a random and long string of characters.
 # Keep this secret, it's used for signing the authentication parts.
@@ -38,3 +39,8 @@ SECRET_KEY = "something_secret_and_hard_to_guess"
 # This should be never change once you setup ZK.
 # If you do, passwords will require a reset.
 PASSWORD_SALT = "something_long_and_secret_ok?"
+
+# The time that we check for expired keys and disable them.
+# 1000 * 60 * 10 (default) is 10 minutes. 
+# Increase or decrease as needed.
+EXPIRE_CHECK_TIME = 1000 * 60 * 10

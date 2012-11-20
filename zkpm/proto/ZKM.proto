@@ -1,0 +1,8 @@
+package zk;
+
+message ZKM {
+	optional string key = 1;
+	optional string hwid = 2;
+	optional int32 type = 3;
+	repeated string options = 4;
+}

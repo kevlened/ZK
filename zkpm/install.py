@@ -33,7 +33,7 @@ def init_db():
 	print 'Database initialised.'
 
 def gather_details():
-	print 'We will now setup your initial admin user.'
+	print 'We will now setup your new user.'
 	correct = False
 	username, password, password1, email = ('','',' ','')
 	while not correct:

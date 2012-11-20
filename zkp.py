@@ -8,6 +8,11 @@ if __name__ == '__main__':
 			from zkpm.install import main
 			main()
 			sys.exit(0)
+		elif sys.argv[1] in ('-a', '--add-user'):
+			from zkpm.install import gather_details
+			gather_details()
+			print 'Your new user is now setup.'
+			sys.exit(0)
 		elif sys.argv[1] in ('-v', '--version'):
 			from zkpm.master import revision
 			print 'ZK', revision()
