@@ -1,4 +1,6 @@
 package zk;
+option java_package = "org.gibsonsec.zk";
+option java_outer_classname = "ZKObj";
 
 message ZKM {
 	optional string key = 1;

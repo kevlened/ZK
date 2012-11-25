@@ -9,45 +9,45 @@ from google.protobuf import descriptor_pb2
 
 
 DESCRIPTOR = descriptor.FileDescriptor(
-  name='ZKM.proto',
+  name='ZKReply.proto',
   package='zk',
-  serialized_pb='\n\tZKM.proto\x12\x02zk\"?\n\x03ZKM\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\x0c\n\x04hwid\x18\x02 \x01(\t\x12\x0c\n\x04type\x18\x03 \x01(\x05\x12\x0f\n\x07options\x18\x04 \x03(\tB\x19\n\x10org.gibsonsec.zkB\x05ZKObj')
+  serialized_pb='\n\rZKReply.proto\x12\x02zk\"J\n\x07ZKReply\x12\x11\n\x05reply\x18\x01 \x01(\x05:\x02-1\x12\x11\n\treply_str\x18\x02 \x01(\t\x12\x0b\n\x03key\x18\x03 \x01(\t\x12\x0c\n\x04user\x18\x04 \x01(\tB\x1b\n\x10org.gibsonsec.zkB\x07ZKReply')
 
 
 
 
-_ZKM = descriptor.Descriptor(
-  name='ZKM',
-  full_name='zk.ZKM',
+_ZKREPLY = descriptor.Descriptor(
+  name='ZKReply',
+  full_name='zk.ZKReply',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     descriptor.FieldDescriptor(
-      name='key', full_name='zk.ZKM.key', index=0,
-      number=1, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=unicode("", "utf-8"),
+      name='reply', full_name='zk.ZKReply.reply', index=0,
+      number=1, type=5, cpp_type=1, label=1,
+      has_default_value=True, default_value=-1,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     descriptor.FieldDescriptor(
-      name='hwid', full_name='zk.ZKM.hwid', index=1,
+      name='reply_str', full_name='zk.ZKReply.reply_str', index=1,
       number=2, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=unicode("", "utf-8"),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     descriptor.FieldDescriptor(
-      name='type', full_name='zk.ZKM.type', index=2,
-      number=3, type=5, cpp_type=1, label=1,
-      has_default_value=False, default_value=0,
+      name='key', full_name='zk.ZKReply.key', index=2,
+      number=3, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=unicode("", "utf-8"),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     descriptor.FieldDescriptor(
-      name='options', full_name='zk.ZKM.options', index=3,
-      number=4, type=9, cpp_type=9, label=3,
-      has_default_value=False, default_value=[],
+      name='user', full_name='zk.ZKReply.user', index=3,
+      number=4, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=unicode("", "utf-8"),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
@@ -60,16 +60,16 @@ _ZKM = descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=17,
-  serialized_end=80,
+  serialized_start=21,
+  serialized_end=95,
 )
 
-DESCRIPTOR.message_types_by_name['ZKM'] = _ZKM
+DESCRIPTOR.message_types_by_name['ZKReply'] = _ZKREPLY
 
-class ZKM(message.Message):
+class ZKReply(message.Message):
   __metaclass__ = reflection.GeneratedProtocolMessageType
-  DESCRIPTOR = _ZKM
+  DESCRIPTOR = _ZKREPLY
   
-  # @@protoc_insertion_point(class_scope:zk.ZKM)
+  # @@protoc_insertion_point(class_scope:zk.ZKReply)
 
 # @@protoc_insertion_point(module_scope)

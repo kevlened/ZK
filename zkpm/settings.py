@@ -9,17 +9,21 @@ DEBUG = False
 # The port and host which the web front will bind to.
 WEB_HOST = "127.0.0.1"
 WEB_PORT = "8080"
-# Should we shrink the css/js/html?
+
+# Should we shrink the css/js/html? (IF POSSIBLE)
 WEB_SHRINK = False
 
 # --- ZK Server Settings ---
 # The port and host which the ZK server replies on.
+# The port for SSL should probably be ZK_PORT + 1, but it's not req.
 ZK_HOST = "127.0.0.1"
 ZK_PORT = "1111"
+ZK_PORT_SSL = "1112"
 
 # --- Database Settings ---
 # Can be sqlite3 or MySQL
 DATABASE_TYPE = "sqlite3"
+
 # These are only needed if you picked MySQL above.
 DATABASE_HOST = "localhost"
 DATABASE_USER = "foo"
@@ -41,6 +45,19 @@ SECRET_KEY = "something_secret_and_hard_to_guess"
 PASSWORD_SALT = "something_long_and_secret_ok?"
 
 # The time that we check for expired keys and disable them.
-# 1000 * 60 * 10 (default) is 10 minutes. 
+# 60 * 10 (default) is 10 minutes. (SECONDS)
 # Increase or decrease as needed.
-EXPIRE_CHECK_TIME = 1000 * 60 * 10
+EXPIRE_CHECK_TIME = 60 * 10
+
+# How long constitutes a worthless connection?
+# If a user takes more than TWIST_TIMEOUT seconds,
+# without closing the connection or sending anything,
+# we'll just have to kill them. (SECONDS)
+TWIST_TIMEOUT = 10
+
+# How often do we check for worthless connections? (SECONDS)
+TWIST_TIMEOUT_CHECK = 10
+
+# --- OpenSSL Settings ---
+KEY_PRIV = '/path/to/privkey.pem'
+KEY_PUB = '/path/to/ca.pem'

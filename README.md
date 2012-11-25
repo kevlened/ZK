@@ -3,7 +3,7 @@ ZK
 
 What is it?
 ---
-ZK started off as a simple idea by PigBacon, which was mostly based around the management of Minecraft clients. This was private and - since it was written in PHP - came with high overhead, wasn't extremely well implemented, and was just a general unpleasant beast to work with.
+ZK (which stands for _Zillion Keys_) started off as a simple idea by PigBacon, which was mostly based around the management of Minecraft clients. It was a private implementation written in PHP, and for some reason was highly sought after.
 
 Now it's a Python based management system which uses Flask as the front end for management, Twisted as the back end for communication, and sqlite for data storage.
 This all rolls into one lovely bundle of joy for programmers and administrators a-like.
@@ -71,6 +71,10 @@ Todo
 
 Status
 ---
+### r6
++ Twisted backend coming to life.
++ Python client example (very bare)
+
 ### r5
 + Cleaned up the code a lot.
 + Start of the API (useless, except for the JSON app and key list).
