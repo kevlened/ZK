@@ -9,7 +9,7 @@ import zk_flask # Setup the Flask app + frontend handle.
 import zk_app
 import zk_key
 import zk_twist
-import api
+import zk_api
 import logger
 
 zk_factory = zk_twist.ZKFactory()
@@ -27,10 +27,10 @@ site = Site(resource)
 reactor.listenTCP(int(settings.WEB_PORT), site)
 
 def main():
-	logger.info('Setting up ZK flask app.')
-	zk_flask.main(api.app)
+	logger.info('Setting up ZK frontend. ({0})'.format(revision()))
+	zk_flask.main(api_app=zk_api.app, revision_=revision)
 	logger.info('Running reactor.')
 	reactor.run()
 
 def revision():
-	return 'r6-git'
+	return 'r7-git'

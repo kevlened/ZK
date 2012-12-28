@@ -48,7 +48,7 @@ def gather_details():
 		email = raw_input('Your email (optional): ')
 		print 'User: ',username
 		print 'email:',email
-		correct = raw_input('Is this correct? [Y/n] ').lower() in ('y', 'yes')
+		correct = raw_input('Is this correct? [Y/n] ').lower() not in ('n', 'no')
 	submit_details (username, password, email)
 
 def submit_details(username, password, email):

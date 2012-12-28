@@ -4,20 +4,32 @@ from flask import redirect, url_for, flash, make_response, jsonify
 
 from twisted.internet import reactor
 
-import settings, logger, util, master # ZK stuff
+import settings, logger, util # ZK stuff
 from pysql_wrapper import pysql_wrapper
 
 import re
 
+
+# Just a const list used in the templates.
+def get_languages():
+	return ['C++', 'C#', 'Java', 'Node', 'Perl',  'Python', 'Rails', 'Ruby', 'VB', 'VB.NET']
+
+
 app = Flask(__name__)
 
-def main(api_app):
+def main(api_app, revision_):
 	"""Sort of a workaround, but only because of context and whatnot.
+		
 		api.app has to be passed explicity after everything is imported,
 		or else you get all sorts of horrid ImportErrors.
 		This is called by zkpm.master
+
+		revision_ is actually just master.revision() passed in, because
+		if it isn't passed in, and we try to import master, we get all
+		sorts of circular imports, which cause hell. Trust me, it's
+		just easier this way.
 	"""
-	app.jinja_env.globals.update(revision=master.revision)
+	app.jinja_env.globals.update(revision=revision_)
 	app.register_blueprint(api_app, url_prefix='/api')
 	app.debug = settings.DEBUG
 	app.secret_key = settings.SECRET_KEY
@@ -51,9 +63,6 @@ def expire_key(id):
 	logger.info("Disabled expired license:", id)
 
 
-# Just a const list used in the templates.
-languages = ['C++', 'C#', 'Java', 'Node', 'Perl',  'Python', 'Rails', 'Ruby', 'VB', 'VB.NET']
-
 """
 If you want to make a page require a login, do this:
 @app.route("/example")
@@ -62,19 +71,19 @@ def example():
 		return requires_login()
 	return render_template('whatever', this, that, etc)
 
-If you make a form, make sure it's secure! Use le-shiggy-diggy.
+If you make a form, make sure it's secure! Use le-csrf.
 @app.route("/example", methods=["POST", "GET"])
 def example():
 	if request.method == "POST":
-		if not shiggy_match():
-			shiggy_bail('example')
+		if not csrf_match():
+			csrf_bail('example')
 		# Validate form.
 	else:
-		return render_template('example.html', shiggy_diggy=shiggy_make())
+		return render_template('example.html', csrf=csrf_make())
 
 And in your form:
-	<input type="hidden" id="le-shiggy-diggy" 
-		name="le-shiggy-diggy" value="{{ shiggy_diggy }}" />
+	<input type="hidden" id="le-csrf" 
+		name="le-csrf" value="{{ csrf }}" />
 """
 
 @app.route("/")
@@ -86,12 +95,12 @@ def index():
 
 @app.route("/login", methods=["POST", "GET"])
 def login():
-	return render_template('login.html', shiggy_diggy=shiggy_make())
+	return render_template('login.html', csrf=csrf_make())
 
 @app.route("/do-login", methods=["POST"])
 def do_login():
-	if not shiggy_match():
-		return shiggy_bail('login')
+	if not csrf_match():
+		return csrf_bail('login')
 	return requires_login()
 
 @app.route("/logout")
@@ -125,6 +134,14 @@ from contextlib import closing
 store = DictStore()
 kvsess = KVSessionExtension(store, app) # http://flask-kvsession.readthedocs.org/en/0.3.1/
 #kvsess.cleanup_sessions() # Cleanup the old sessions periodically.
+
+@app.route("/-test")
+def _test():
+	print '*'*10
+	print store, store.d
+	print '*'*10
+	return redirect(url_for('index'))
+
 
 def pysql():
 	# We'll populate this with the info for both sqlite3 and MySQL.
@@ -180,25 +197,25 @@ def requires_login(return_page=None):
 	else:
 		return redirect(url_for('login'))
 
-def shiggy_bail(where, **kwargs):
+def csrf_bail(where, **kwargs):
 	flash("Something went wrong. Please try again.", 'error')
 	return redirect(url_for(where, **kwargs))
 
-def shiggy_match():
-	if 'le-shiggy-diggy' not in request.form \
+def csrf_match():
+	if 'le-csrf' not in request.form \
 			or 'le-submit' not in request.form \
-			or 'shiggy_diggy' not in session:
+			or 'csrf' not in session:
 		return False
 	# Make sure they iniated this.
-	if request.form['le-shiggy-diggy'] != session['shiggy_diggy']:
-		logger.warning("User", get_username(), "failed shiggy-diggy tests.", "Possible cross site request attack?")
-		del session['shiggy_diggy']
+	if request.form['le-csrf'] != session['csrf']:
+		logger.warning("User", get_username(), "failed csrf tests.", "Possible cross site request attack?")
+		del session['csrf']
 		return False
 	return True
 
-def shiggy_make():
+def csrf_make():
 	# We use this to make sure the user initiated this.
 	# If they didn't, this won't exist in the form, or it'll mismatch.
-	shiggy_diggy = gen_secret()
-	session['shiggy_diggy'] = shiggy_diggy
-	return shiggy_diggy
+	csrf = gen_secret()
+	session['csrf'] = csrf
+	return csrf

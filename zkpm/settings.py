@@ -7,6 +7,7 @@ DEBUG = False
 
 # --- Webserver Settings ---
 # The port and host which the web front will bind to.
+# Use IP 0.0.0.0 to bind to any address, incase you want forward facing.
 WEB_HOST = "127.0.0.1"
 WEB_PORT = "8080"
 
@@ -31,7 +32,10 @@ DATABASE_PASS = "baz"
 DATABASE_NAME = "test"
 
 # If you're using sqlite, give us a database file to work with.
-DATABASE_PATH = "zk.db"
+# This has to be absolute, or else sqlite will bitch.
+DATABASE_PATH = "/path/to/zk.db"
+
+LOG_DIR = "/path/to/logs"
 
 # --- Misc Settings ---
 
@@ -59,5 +63,5 @@ TWIST_TIMEOUT = 10
 TWIST_TIMEOUT_CHECK = 10
 
 # --- OpenSSL Settings ---
-KEY_PRIV = '/path/to/privkey.pem'
-KEY_PUB = '/path/to/ca.pem'
+KEY_PRIV = "/path/to/privkey.pem"
+KEY_PUB = "/path/to/ca.pem"

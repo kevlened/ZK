@@ -2,7 +2,7 @@
 from twisted.internet.protocol import Protocol, Factory
 from twisted.internet import reactor
 
-from zkpm.proto import ZKM_pb2, ZKReply_pb2
+from proto import ZKM_pb2, ZKReply_pb2
 import settings
 from zk_flask import pysql
 import logger
@@ -26,7 +26,6 @@ class ZKProtocol(Protocol):
 		self.factory = factory
 		self.closed = False
 		self.stamp = int(time.time())
-		#self.deferred = reactor.callLater(settings.TWIST_TIMEOUT, self.close, force=True)
 
 	def connectionMade(self):
 		self.ip, self.port = self.transport.getPeer().host, self.transport.getPeer().port
@@ -44,6 +43,7 @@ class ZKProtocol(Protocol):
 				zkreply.reply, zkreply.reply_str = ZKConst.get['NO_SUCH_KEY']
 				zkreply.key = zkm.key
 				zkreply.user = ""
+				zkreply.app = ""
 				self.send(zkreply.SerializeToString(), raw=True)
 				self.close()
 				return
@@ -60,6 +60,8 @@ class ZKProtocol(Protocol):
 				zkreply.reply, zkreply.reply_str = ZKConst.get['EXPIRED']
 				zkreply.key = zkm.key
 				zkreply.user = key['user']
+				app = pysql().where('id', key['app']).get('apps')
+				zkreply.app = app[0]['name'] if app else ''
 				self.send(zkreply.SerializeToString(), raw=True)
 				self.close()
 				return
@@ -70,6 +72,8 @@ class ZKProtocol(Protocol):
 				zkreply.reply, zkreply.reply_str = ZKConst.get['DISABLED']
 				zkreply.key = zkm.key
 				zkreply.user = key['user']
+				app = pysql().where('id', key['app']).get('apps')
+				zkreply.app = app[0]['name'] if app else ''
 				self.send(zkreply.SerializeToString(), raw=True)
 				self.close()
 				return
@@ -81,6 +85,8 @@ class ZKProtocol(Protocol):
 				zkreply.reply, zkreply.reply_str = ZKConst.get['INVALID_HWID']
 				zkreply.key = zkm.key
 				zkreply.user = key['user']
+				app = pysql().where('id', key['app']).get('apps')
+				zkreply.app = app[0]['name'] if app else ''
 				self.send(zkreply.SerializeToString(), raw=True)
 				self.close()
 				return
@@ -90,6 +96,8 @@ class ZKProtocol(Protocol):
 			zkreply.reply, zkreply.reply_str = ZKConst.get['SUCCESS']
 			zkreply.key = zkm.key
 			zkreply.user = key['user']
+			app = pysql().where('id', key['app']).get('apps')
+			zkreply.app = app[0]['name'] if app else ''
 			self.send(zkreply.SerializeToString(), raw=True)
 			#self.close()
 			return
@@ -99,12 +107,13 @@ class ZKProtocol(Protocol):
 			zkreply.reply, zkreply.reply_str = ZKConst.get['BAIL']
 			zkreply.key = ""
 			zkreply.user = ""
+			zkreply.app = ""
 			self.send(zkreply.SerializeToString(), raw=True)
 			self.close()
 			return
 
 	def connectionLost(self, reason):
-		logger.info("Client {0}:{1} {2}disconnected".format(self.ip, self.port, 'forcefully ' if self.closed else ''))
+		logger.info("Client connection {0}:{1} {2}.".format(self.ip, self.port, 'closed' if self.closed else 'disconnected'))
 		if self in self.factory.clients:
 			self.factory.clients.remove(self)
 
@@ -132,14 +141,17 @@ class ZKFactory(Factory):
 		self.check()
 
 	def check(self):
-		logger.debug("Checking for worthless connections.")
+		# logger.debug() calls are commented, so that
+		# we don't spam the log files with junk.
+		
+		#logger.debug("Checking for worthless connections.")
 		worthless = 0
 		stamp = int(time.time())
 		for client in self.clients:
 			if (stamp - client.stamp) >= settings.TWIST_TIMEOUT:
 				client.close(True)
 				worthless += 1
-		logger.debug("Found", worthless, "worthless connections. Waiting for", settings.TWIST_TIMEOUT_CHECK, "seconds.")
+		#logger.debug("Found", worthless, "worthless connections. Waiting for", settings.TWIST_TIMEOUT_CHECK, "seconds.")
 		reactor.callLater(settings.TWIST_TIMEOUT_CHECK, self.check)
 
 	def buildProtocol(self, addr):

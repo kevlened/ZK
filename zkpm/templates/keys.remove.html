@@ -29,7 +29,7 @@
 <p>
 	Are you sure you want to remove this license?
 	<form method="POST" action="{{ url_for('key_remove', id=id) }}">
-		<input type="hidden" id="le-shiggy-diggy" name="le-shiggy-diggy" value="{{ shiggy_diggy }}" />
+		<input type="hidden" id="le-csrf" name="le-csrf" value="{{ csrf }}" />
 		<input type="submit" id="le-submit" name="le-submit" value="Remove" />
 	</form>
 </p>

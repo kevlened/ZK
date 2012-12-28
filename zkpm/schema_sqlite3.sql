@@ -6,14 +6,14 @@ CREATE TABLE IF NOT EXISTS `users` ( -- People who can login.
 `id` INTEGER PRIMARY KEY,
 `login` varchar(32) NOT NULL,
 `username` varchar(32) NOT NULL,
-`password` varchar(64) NOT NULL, -- sha256() of hashed password.
+`password` varchar(64) NOT NULL, -- sha256() of (salt + user.lower() + password + salt).
 `email` text NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS `apps` ( -- Application list.
 `id` INTEGER PRIMARY KEY,
-`name` varchar(64) NOT NULL,		-- The display name of the app.
-`language` varchar(32), 			-- Optionally, what language is it written in?
+`name` varchar(64) NOT NULL,				-- The display name of the app.
+`language` varchar(32), 					-- Optionally, what language is it written in?
 `active` tinyint(1) NOT NULL DEFAULT '1',	-- Is the app enabled? This more-or-less disables all keys for the app.
 `version` int(10) NOT NULL DEFAULT '0'		-- Unix timestamp of the last version push.
 );

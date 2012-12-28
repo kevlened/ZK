@@ -3,15 +3,18 @@ ZK
 
 What is it?
 ---
-ZK (which stands for _Zillion Keys_) started off as a simple idea by PigBacon, which was mostly based around the management of Minecraft clients. It was a private implementation written in PHP, and for some reason was highly sought after.
+ZK (which stands for _Zillion Keys_ (seriously, it does!)) started off as a simple idea by PigBacon, which was mostly based around the management of Minecraft clients. It was a private implementation written in PHP, and for some reason was highly sought after (only God may know why).
 
 Now it's a Python based management system which uses Flask as the front end for management, Twisted as the back end for communication, and sqlite for data storage.
-This all rolls into one lovely bundle of joy for programmers and administrators a-like.
+This rolls into one simplistic application and key management system for app developers and admins a-like.
 
-It is developed by _Chris_ and _Huey_.
+It is developed by _Chris_ and _Huey_. It's licensed under the MIT License.
 
 What do I need to run it?
 ---
++ Some __POSIX compliant__ operating system. (I test on Debian Wheezy)
+	+ You could probably muck around to get it working on Windows, shouldn't be particularly hard.
+	+ Windows isn't supported mainly because of the daemon system. I won't take any butchered commits so Windows works either, sorry.
 + Python 2.7.3 (This is what I test with, 2.6.x should work, 3.x probably won't)
 + [Twisted Python](http://twistedmatrix.com)
 + [Flask](http://flask.pocoo.org)
@@ -23,11 +26,32 @@ What do I need to run it?
 	+ Try installing the `python-protobuf` package, if you're on a Debian based system.
 	+ Otherwise, installation is simple, just check the protobuf site for more info.
 
+Running
+---
+ZK is pretty simple to start/stop/restart and interact with.
++ Start: `python zkp.py start`
++ Stop: `python zkp.py stop`
++ Restart: `python zkp.py restart`
++ Start without daemonizing: `python zkp.py start-no-daemon`
+	+ This means it will run in your current shell. (Exit with ^C)
+	+ Good for debugging stuff in real time (otherwise just check debug log)
++ You can check the status of your daemon with: `python zkp.py status`
+	+ This will only work if the server OS has a __/proc filesystem__.
+	+ UNIX based OS's mostly do, I'm not certain about OSX, however.
+	+ Since this is just for convenience, I won't change it to work on all OS types.
+	+ You could alternatively use: `ps aux | grep -i python | grep -v grep` to check.
+
+Logging
+---
+You are able to set a logging directory in your settings file. ZK will simply log into that directory, creating four files: `info.log`, `debug.log`, `warning.log`, `error.log`. The error.log will contain both errors and fatal errors (things which break ZK completely).
++ Even if you don't have DEBUG set to True in your settings, everything will still be written into the debug.log file. This means that if something goes wrong but you don't know what, you can still try and figure out what is was.
++ If something breaks, try and replicate it without daemonizing, (with DEBUG=True), and copy the error into an issue on GH.
+
 Notes
 ---
 + This uses a modified version of my [pysql-wrapper](https://github.com/PigBacon/pysql-wrapper).
 	+ The usage is the same, but it is modified to work with Flask.
-	+ A pysql_wrapper object is closed every time a query is executed, so you should make a new one before querying stuff.
+	+ A pysql_wrapper object is closed every time a query is executed, so you should make a new one (simply `pysql()`) before querying stuff.
 + ZK __is not__ meant to prevent cracking.
 	+ The weakest link in your app may well be the server, and whilst we'll try to prevent it being easy, this might well be a poor security system.
 	+ This is aimed to make your life as a programmer/application manager easier, not be a foolproof anti-cracking protection system.
@@ -50,27 +74,41 @@ Installation
 + Download the latest version of ZK.
 + Install the dependencies
 + Open `settings.py` and, if required, change anything you feel.
+	+ There is __lots__ which requires changing!
+	+ Most paths are just simply `"/path/to/some_file"`, which you'll obviously have to change.
 + Open a terminal where your `zkp.py` is.
 + Run the first time installer: `python zkp.py --install`
 + Follow the prompts and allow the database to be initialised and populated.
-+ Run ZK: `python zkp.py`
++ Run ZK: `python zkp.py start`
 	+ You should probably generate a secret key here.
 	+ Visit http://host:port/secret and put those in your settings file, restart ZK.
++ You can stop ZK with: `python zkp.py stop`
 
 Todo
 ---
-+ Backend + backend protocol.
 + Example clients in various languages to show implementation.
-+ More robust logging.
++ More robust logging. (__DONE__)
 + Fix some scetchy workaround hacks:
 	+ HTML \<form\> + \<table\> hacks in `apps.edit.html` and `keys.edit.html`.
 	+ MySQL schema + installing hacks. Probably not fixable, and not really a big issue.
 + Pagination for /app/manage and /key/manage. (Possibly just load more via JS)
 + Manage the wiki, explaining usage, modification, and implementation.
 + Complete implementation of the API.
++ STARTTLS and listen on one port instead of two, perhaps?
 
 Status
 ---
+### r7
++ ZK is now daemonised. This means it's easier to run.
+	+ `python zkp.py start|stop|restart`
+	+ `python zkp.py status` to check the status. (Requires procfs)
++ Examples are actually... there. Sort of.
++ Added checks so you can't run ZK as root. (os.getuid() == 0)
++ Images added to repo so I can put them on the wiki, or something.
++ Changed "le-shiggy-diggy" to "le-csrf", since it is infact a cross-site-request-forgery protection system. (I had just forgotten the name)
++ Cleaned up the installer a bit.
++ ZK has a nice command line documentation. `python zkp.py --help`
+
 ### r6
 + Twisted backend coming to life.
 + Python client example (very bare)

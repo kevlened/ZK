@@ -1,10 +1,11 @@
 package zk;
 option java_package = "org.gibsonsec.zk";
-option java_outer_classname = "ZKReply";
+option java_outer_classname = "ZKReplyObj";
 
 message ZKReply {
 	optional int32 reply = 1 [default = -1];
 	optional string reply_str = 2;
 	optional string key = 3;
 	optional string user = 4;
+	optional string app = 5;
 }

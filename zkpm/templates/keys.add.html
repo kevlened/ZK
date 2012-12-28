@@ -29,7 +29,7 @@
 	<table class="one-column-emphasis first" style="width: 500px;" summary="ZK App Management">
 	<tbody>
 	<form method="POST" action="{{ url_for('key_add') }}">
-		<input type="hidden" id="le-shiggy-diggy" name="le-shiggy-diggy" value="{{ shiggy_diggy }}" />
+		<input type="hidden" id="le-csrf" name="le-csrf" value="{{ csrf }}" />
 		<tr>
 			<td>
 				<label for="le-app">App</label>

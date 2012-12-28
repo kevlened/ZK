@@ -4,8 +4,8 @@ from flask import redirect, url_for, flash, make_response, jsonify
 
 import settings, logger, util
 import zk_flask as zk
-from zk_flask import languages, get_login, requires_login, pysql, Struct
-from zk_flask import get_username, shiggy_make, shiggy_match, shiggy_bail
+from zk_flask import get_login, requires_login, pysql, Struct
+from zk_flask import get_username, csrf_make, csrf_match, csrf_bail
 
 import re
 
@@ -38,8 +38,8 @@ def key_add():
 		return requires_login()
 
 	if request.method == "POST":
-		if not shiggy_match():
-			return shiggy_bail('key_add')
+		if not csrf_match():
+			return csrf_bail('key_add')
 		for le_part in ('le-app', 'le-user', 'le-needs-hwid', 'le-active', 
 						'le-expires', 'le-expires-select', 'le-expires-years',
 						'le-expires-months', 'le-expires-weeks', 'le-expires-days', 'le-expires-hours',
@@ -96,7 +96,9 @@ def key_add():
 			flash("Something went wrong. Please try again.", 'error')
 			return redirect(url_for('key_add'))
 		flash('You just created this key. You can edit it here.', 'success')
-		return redirect(url_for('key_edit', id=pysql_._cursor.lastrowid))
+		key_id = pysql_._cursor.lastrowid
+		logger.info("Successfully created license", key_id)
+		return redirect(url_for('key_edit', id=key_id))
 	else:
 		apps = []
 		for app_ in pysql().get('apps'):
@@ -105,7 +107,7 @@ def key_add():
 				"name": app_['name']
 			}
 			apps.append(Struct(**app))
-		return render_template('keys.add.html', login=get_username(), apps=apps, shiggy_diggy=shiggy_make())
+		return render_template('keys.add.html', login=get_username(), apps=apps, csrf=csrf_make())
 
 @app.route("/key/edit")
 @app.route("/key/edit/<int:id>", methods=["POST", "GET"])
@@ -127,8 +129,8 @@ def key_edit(id=None):
 	if request.method == "POST":
 		if 'le-type' not in request.form or 'le-submit' not in request.form:
 			return flash_wrong(id)
-		if not shiggy_match():
-			return shiggy_bail('key_edit', id=id)
+		if not csrf_match():
+			return csrf_bail('key_edit', id=id)
 		type_ = request.form['le-type']
 		if type_ not in ('app', 'name', 'email', 'license',
 						 'needs-hwid', 'hwid', 'disabled', 'expires'):
@@ -220,7 +222,7 @@ def key_edit(id=None):
 			key = pysql().where('id', id).get('licenses')
 			flash("Successfully updated expiration.", 'success')
 
-		logger.info("Successfully updated app", id)
+		logger.info("Successfully updated license", id)
 
 	key = key[0] # Grab the dict.
 	apps = []
@@ -235,7 +237,7 @@ def key_edit(id=None):
 		"key": Struct(**key),
 		"apps": apps,
 		"id": id,
-		"shiggy_diggy": shiggy_make()
+		"csrf": csrf_make()
 	}
 	return render_template('keys.edit.html', **extra)
 
@@ -252,8 +254,8 @@ def key_remove(id=None):
 		return redirect(url_for('key_manage'))
 
 	if request.method == "POST":
-		if not shiggy_match():
-			return shiggy_bail('key_manage')
+		if not csrf_match():
+			return csrf_bail('key_manage')
 		if not pysql().where('id', id).delete('licenses'):
 			logger.error("Unable to delete license", id)
 			flash("Unable to delete license. Please try again.", 'error')
@@ -271,6 +273,6 @@ def key_remove(id=None):
 		"login": get_username(),
 		"key": Struct(**key),
 		"id": id,
-		"shiggy_diggy": shiggy_make()
+		"csrf": csrf_make()
 	}
 	return render_template('keys.remove.html', **extra)

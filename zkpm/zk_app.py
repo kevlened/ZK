@@ -4,8 +4,8 @@ from flask import redirect, url_for, flash, make_response, jsonify
 
 import settings, logger, util
 import zk_flask as zk
-from zk_flask import languages, get_login, requires_login, pysql, Struct
-from zk_flask import get_username, shiggy_make, shiggy_match, shiggy_bail
+from zk_flask import get_languages, get_login, requires_login, pysql, Struct
+from zk_flask import get_username, csrf_make, csrf_match, csrf_bail
 
 import re
 
@@ -36,8 +36,8 @@ def app_add():
 		for le_part in ('le-name', 'le-language', 'le-active', 'le-submit'):
 			if le_part not in request.form:
 				return redirect(url_for('app_add'))
-		if not shiggy_match():
-			return shiggy_bail('app_add')
+		if not csrf_match():
+			return csrf_bail('app_add')
 		import re
 		le_name = request.form['le-name'][:64]
 		if not re.match(r'^[a-zA-Z0-9_\-]+$', le_name):
@@ -66,7 +66,7 @@ def app_add():
 		flash('You just created this app. You can edit it here.', 'success')
 		return redirect(url_for('app_edit', id=pysql_._cursor.lastrowid))
 	else:
-		return render_template('apps.add.html', login=get_username(), languages=languages, shiggy_diggy=shiggy_make())
+		return render_template('apps.add.html', login=get_username(), languages=get_languages(), csrf=csrf_make())
 
 @app.route("/app/edit")
 @app.route("/app/edit/<int:id>", methods=["POST", "GET"])
@@ -79,36 +79,38 @@ def app_edit(id=None):
 	if len(app) != 1:
 		return redirect(url_for('app_manage'))
 	
-	def flash_wrong(id):
+	def flash_wrong(id, error=""):
+		if error != "":
+			error = "({0})".format(error)
 		# Simple temp def to flash an error and redirect.
-		logger.error("Something went wrong updating app", id)
+		logger.error("Something went wrong updating app", id, error)
 		flash("Something went wrong.", 'warning')
 		return redirect(url_for('app_edit', id=id))
 
 	if request.method == "POST":
 		if 'le-type' not in request.form or 'le-submit' not in request.form:
-			return flash_wrong(id)
-		if not shiggy_match():
-			return shiggy_bail('app_edit', id=id)
+			return flash_wrong(id, error="Missing type or submit form field. ({0})".format(type_))
+		if not csrf_match():
+			return csrf_bail('app_edit', id=id)
 		type_ = request.form['le-type']
 		if type_ not in ('name', 'language', 'active', 'version'):
-			return flash_wrong(id)
+			return flash_wrong(id, error="Invalid type. ({0})".format(type_))
 
 		if type_ == "name":
 			if 'le-name' not in request.form:
-				return flash_wrong(id)
+				return flash_wrong(id, error="Missing name field ({0})".format(type_))
 			name = request.form['le-name'][:64] # Trim if needed.
 			if not re.match(r'^[a-zA-Z0-9_\-]+$', le_name):
 				flash("Sorry, app names can only include alphanumeric characters, dashes and underscores.", 'error')
 				return redirect(url_for('app_edit', id=id))
 			if not pysql().where('id', id).update('apps', {"name": name}):
-				return flash_wrong(id)
+				return flash_wrong(id, error="Unable to update app. ({0})".format(type_))
 			app = pysql().where('id', id).get('apps')
 			flash("Successfully updated app name.", 'success')
 
 		elif type_ == "language":
 			if 'le-language' not in request.form or 'le-other-language' not in request.form:
-				return flash_wrong(id)
+				return flash_wrong(id, error="Missing language field. ({0})".format(type_))
 			language = request.form['le-language'][:32]
 			if language == "Other":
 				language = request.form['le-other-language'][:32] # Trim if needed.
@@ -117,16 +119,16 @@ def app_edit(id=None):
 				return redirect(url_for('app_edit', id=id))
 
 			if not pysql().where('id', id).update('apps', {"language": language}):
-				return flash_wrong(id)
+				return flash_wrong(id, error="Unable to update app. ({0})".format(type_))
 			app = pysql().where('id', id).get('apps')
 			flash("Successfully updated app language.", 'success')
 
 		elif type_ == "active":
 			if 'le-active' not in request.form:
-				return flash_wrong(id)
+				return flash_wrong(id, error="Missing active field. ({0})".format(type_))
 			active = 1 if request.form['le-active'] == "yes" else 0
 			if not pysql().where('id', id).update('apps', {"active": active}):
-				return flash_wrong(id)
+				return flash_wrong(id, error="Unable to update app. ({0})".format(type_))
 			app = pysql().where('id', id).get('apps')
 			flash("Successfully updated app activity.", 'success')
 
@@ -146,9 +148,9 @@ def app_edit(id=None):
 		"login": get_username(),
 		"app": Struct(**app),
 		"id": id,
-		"languages": languages,
-		"def_language": app['language'] in languages,
-		"shiggy_diggy": shiggy_make()
+		"languages": get_languages(),
+		"def_language": app['language'] in get_languages(),
+		"csrf": csrf_make()
 	}
 	return render_template('apps.edit.html', **extra)
 
@@ -165,8 +167,8 @@ def app_remove(id=None):
 		return redirect(url_for('app_manage'))
 
 	if request.method == "POST":
-		if not shiggy_match():
-			return shiggy_bail('app_manage')
+		if not csrf_match():
+			return csrf_bail('app_manage')
 		if not pysql().where('id', id).delete('apps'):
 			logger.error("Unable to delete app", id)
 			flash("Unable to delete app. Please try again.", 'error')
@@ -186,6 +188,6 @@ def app_remove(id=None):
 		"login": get_username(),
 		"app": Struct(**app),
 		"id": id,
-		"shiggy_diggy": shiggy_make()
+		"csrf": csrf_make()
 	}
 	return render_template('apps.remove.html', **extra)
