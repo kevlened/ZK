@@ -3,18 +3,18 @@ ZK
 
 What is it?
 ---
-ZK (which stands for _Zillion Keys_ (seriously, it does!)) started off as a simple idea by PigBacon, which was mostly based around the management of Minecraft clients. It was a private implementation written in PHP, and for some reason was highly sought after (only God may know why).
+ZK (which stands for _Zillion Keys_ (seriously, it does!)) started off as a simple idea by me, which was mostly based around the management of Minecraft clients. It was a private implementation written in PHP, and for some reason was highly sought after (only God may know why).
 
 Now it's a Python based management system which uses Flask as the front end for management, Twisted as the back end for communication, and sqlite for data storage.
 This rolls into one simplistic application and key management system for app developers and admins a-like.
 
-It is developed by _Chris_ and _Huey_. It's licensed under the MIT License.
+It is developed by huey and [plausibility](https://github.com/plausibility). It's licensed under the MIT License.
 
 What do I need to run it?
 ---
 + Some __POSIX compliant__ operating system. (I test on Debian Wheezy)
 	+ You could probably muck around to get it working on Windows, shouldn't be particularly hard.
-	+ Windows isn't supported mainly because of the daemon system. I won't take any butchered commits so Windows works either, sorry.
+	+ Windows isn't supported mainly because of the daemon system. I won't take any butchered code so Windows works either, sorry.
 + Python 2.7.3 (This is what I test with, 2.6.x should work, 3.x probably won't)
 + [Twisted Python](http://twistedmatrix.com)
 + [Flask](http://flask.pocoo.org)
@@ -49,7 +49,7 @@ You are able to set a logging directory in your settings file. ZK will simply lo
 
 Notes
 ---
-+ This uses a modified version of my [pysql-wrapper](https://github.com/PigBacon/pysql-wrapper).
++ This uses a modified version of my [pysql-wrapper](https://github.com/plausibility/pysql-wrapper).
 	+ The usage is the same, but it is modified to work with Flask.
 	+ A pysql_wrapper object is closed every time a query is executed, so you should make a new one (simply `pysql()`) before querying stuff.
 + ZK __is not__ meant to prevent cracking.
